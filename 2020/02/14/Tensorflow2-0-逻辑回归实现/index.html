@@ -5,16 +5,21 @@
   
 
   
-  <title>Gengar</title>
+  <title>Tensorflow2.0 逻辑回归实现 | Gengar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一个兴趣使然的小站">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Gengar">
-<meta property="og:url" content="https://gengarrr.github.io/index.html">
+  <meta name="description" content="学习资料：B站教程在处理分类问题时，我们最好使用交叉熵损失函数(loss &#x3D; &#39;corss_entropy&#39;)，因为如果使用平方差损失函数(loss &#x3D; &#39;msq&#39;)，无法得到更大的损失。虽然平方差损失函数也能够用来刻画分类问题的损失值，但需要大量的训练次数，因此不推荐使用。  接下来通过一个信用诈骗数据集的例子来理解逻辑回归。   我们首先在jupyter not">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tensorflow2.0 逻辑回归实现">
+<meta property="og:url" content="https://gengarrr.github.io/2020/02/14/Tensorflow2-0-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E5%AE%9E%E7%8E%B0/index.html">
 <meta property="og:site_name" content="Gengar">
-<meta property="og:description" content="一个兴趣使然的小站">
+<meta property="og:description" content="学习资料：B站教程在处理分类问题时，我们最好使用交叉熵损失函数(loss &#x3D; &#39;corss_entropy&#39;)，因为如果使用平方差损失函数(loss &#x3D; &#39;msq&#39;)，无法得到更大的损失。虽然平方差损失函数也能够用来刻画分类问题的损失值，但需要大量的训练次数，因此不推荐使用。  接下来通过一个信用诈骗数据集的例子来理解逻辑回归。   我们首先在jupyter not">
+<meta property="og:image" content="d:/Programming/Blog/source/pictures/20200214/00.png">
+<meta property="og:image" content="d:/Programming/Blog/source/pictures/20200214/01.png">
+<meta property="article:published_time" content="2020-02-14T09:49:31.000Z">
+<meta property="article:modified_time" content="2020-02-14T11:57:51.694Z">
 <meta property="article:author" content="Gengar">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="d:/Programming/Blog/source/pictures/20200214/00.png">
   
     <link rel="alternate" href="/atom.xml" title="Gengar" type="application/atom+xml">
   
@@ -63,9 +68,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-Tensorflow2-0-逻辑回归实现" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Tensorflow2-0-逻辑回归实现" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/02/14/Tensorflow2-0-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E5%AE%9E%E7%8E%B0/" class="article-date">
   <time datetime="2020-02-14T09:49:31.000Z" itemprop="datePublished">2020-02-14</time>
@@ -78,8 +81,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/14/Tensorflow2-0-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E5%AE%9E%E7%8E%B0/">Tensorflow2.0 逻辑回归实现</a>
+    <h1 class="article-title" itemprop="name">
+      Tensorflow2.0 逻辑回归实现
     </h1>
   
 
@@ -123,60 +126,19 @@ plt.plot(history.epoch, history.history.get(&apos;acc&apos;))</code></pre>
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/02/12/hello-world/" class="article-date">
-  <time datetime="2020-02-12T11:19:44.481Z" itemprop="datePublished">2020-02-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/02/12/hello-world/">Hello World</a>
-    </h1>
+    <a href="/2020/02/12/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://gengarrr.github.io/2020/02/12/hello-world/" data-id="ck6m4c2910001esupggrg53m0" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-
 
 </section>
         
