@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Tensorflow2.0 softmax多分类问题实现 |  Ayer
+    tensorflow2.0 Dropout抑制过拟合与超参数选择 |  Ayer
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -33,7 +33,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-Tensorflow2-0-softmax多分类问题实现" class="article article-type-post" itemscope
+  <article id="post-tensorflow2-0-Dropout抑制过拟合与超参数选择" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -41,7 +41,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Tensorflow2.0 softmax多分类问题实现
+  tensorflow2.0 Dropout抑制过拟合与超参数选择
 </h1>
   
 
@@ -50,8 +50,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/02/15/Tensorflow2-0-softmax%E5%A4%9A%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98%E5%AE%9E%E7%8E%B0/" class="article-date">
-  <time datetime="2020-02-15T10:02:26.000Z" itemprop="datePublished">2020-02-15</time>
+      <a href="/2020/02/17/tensorflow2-0-Dropout%E6%8A%91%E5%88%B6%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E8%B6%85%E5%8F%82%E6%95%B0%E9%80%89%E6%8B%A9/" class="article-date">
+  <time datetime="2020-02-17T12:44:36.000Z" itemprop="datePublished">2020-02-17</time>
 </a>
       
       
@@ -61,7 +61,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">761字</span>
+            <span class="post-count">895字</span>
         </span>
     </span>
 
@@ -97,58 +97,67 @@
       
 
       
-      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av62215565?p=9" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-使用sparse-categorical-crossentropy计算的情况"><a href="#0x00-使用sparse-categorical-crossentropy计算的情况" class="headerlink" title="0x00 使用sparse_categorical_crossentropy计算的情况"></a>0x00 使用sparse_categorical_crossentropy计算的情况</h2><p>我们在处理多分类问题是，最后一层的输出值一般是概率值，因此需要使用<code>softmax</code>函数作为激活函数。我们用 <code>fashion_mnist</code> 数据集作为实例，来具体解释<code>softmax</code>的用法。</p>
-<p>首先打开<code>jupyter notebook</code>，引入模块。  </p>
-<pre><code>import tensorflow as tf
+      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av62215565?p=9" target="_blank" rel="noopener">B站教程</a></h3><p>我们仍是通过之前的Fashion-Mnist数据集理解<code>Dropout</code>是如何抑制过拟合的。</p>
+<p>导入模块。</p>
+<pre><code>import tensorflow as tf 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-%matplotlib inline</code></pre><p>初次加载需要下载。初始化训练集，测试集。</p>
-<pre><code>fashion_mnist = tf.keras.datasets.fashion_mnist.load_data()
-(train_image, train_label), (test_image, test_label) = fashion_mnist</code></pre><p>我们可以查看一下<code>train_label</code></p>
-<pre><code>train_label</code></pre><p>array([9, 0, 0, …, 3, 0, 5], dtype=uint8)</p>
-<p>label数组中的数据全为0-9，表示十种衣服的分类。</p>
-<p>接着进行归一化，除以255是因为图片灰度区间是0-255。  </p>
-<pre><code>train_image = train_image/255
-test_image = test_image/255</code></pre><p>查看图片形状。</p>
-<pre><code>train_image.shape</code></pre><p>(60000, 28, 28)</p>
-<p>接着建立模型。<br>第一层为Flatten层，因为Desne是将一维的数据映射到一维的数据，(28, 28)是二维数据，所以需要将它扁平化为一维数据,扁平成28*28的向量。注意所有“层”都是大写。  </p>
-<p>使用relu激活函数，输出128个隐藏单元，不能设置太小，因为如果Dense太小会舍弃掉很多信息。但也不能太大，否则会产生过拟合问题。</p>
-<p>最后要输出10个概率值，使用softmax激活，得到概率输出，10表示有十种衣服种类。</p>
-<pre><code>model = tf.keras.Sequential()
+%matplotlib inline
 
+fashion_mnist = tf.keras.datasets.fashion_mnist.load_data()
+(train_image, train_label), (test_image, test_label) = fashion_mnist
+
+# 归一化 灰度区间是0-255
+train_image = train_image/255
+test_image = test_image/255
+
+train_label_onehot = tf.keras.utils.to_categorical(train_label)
+test_label_onehot = tf.keras.utils.to_categorical(test_label)</code></pre><p>注意这里相比较之前的代码，增加了Dropout层。</p>
+<pre><code># train_label已经变为独热编码，所以编译时损失函数应当使用categorical_crossentropy
+
+model = tf.keras.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=(28,28)))
 model.add(tf.keras.layers.Dense(128, activation=&apos;relu&apos;))
-model.add(tf.keras.layers.Dense(10, activation=&apos;softmax&apos;))</code></pre><p>在tf.keras里，对于多分类问题我们使用<code>categorical_crossentropy</code>和<code>sparse_categorical_crossentropy</code>来计算softmax交叉熵。<br><code>metrics</code>:衡量指标</p>
-<pre><code>model.compile(optimizer=&apos;adam&apos;,
-         loss = &apos;sparse_categorical_crossentropy&apos;,
-         metrics=[&apos;acc&apos;])</code></pre><p>model.fit进行训练，<code>epochs</code>设置为10，表示训练10轮。<br>可以看到最后训练的正确率为0.9094。</p>
-<img src="https://s2.ax1x.com/2020/02/15/1zEzcV.png" width="60%">
-
-<p>使用测试集来测试正确率，得到正确率为0.8797。</p>
-<pre><code>model.evaluate(test_image, test_label)</code></pre><h2 id="0x01-使用categorical-crossentropy计算的情况"><a href="#0x01-使用categorical-crossentropy计算的情况" class="headerlink" title="0x01 使用categorical_crossentropy计算的情况"></a>0x01 使用categorical_crossentropy计算的情况</h2><p>当label进行独热编码时，使用<code>categorical_crossentropy</code>。</p>
-<p>独热编码举例：北京[1, 0, 0] 上海[0, 1, 0] 深圳[0, 0, 1]</p>
-<p>独热编码详解：<a href="https://www.cnblogs.com/zongfa/p/9305657.html" target="_blank" rel="noopener">https://www.cnblogs.com/zongfa/p/9305657.html</a></p>
-<p>使用<code>keras</code>带有的模块进行编码。</p>
-<pre><code>train_label_onehot = tf.keras.utils.to_categorical(train_label)
-test_label_onehot = tf.keras.utils.to_categorical(test_label)</code></pre><p>对编码后的数据进行查看。</p>
-<img src="https://s2.ax1x.com/2020/02/15/1zZKx0.png" width="60%">
-
-<p>构建模型的步骤与之前相同，但注意<code>train_label</code>已经变为独热编码，所以编译时损失函数应当使用<code>categorical_crossentropy</code>。</p>
-<pre><code>model = tf.keras.Sequential()
-model.add(tf.keras.layers.Flatten(input_shape=(28,28)))
+# 添加Dropout层，随机丢弃50%。
+model.add(tf.keras.layers.Dropout(0.5))
 model.add(tf.keras.layers.Dense(128, activation=&apos;relu&apos;))
+# 添加Dropout层，随机丢弃50%。
+model.add(tf.keras.layers.Dropout(0.5))
+model.add(tf.keras.layers.Dense(128, activation=&apos;relu&apos;))
+# 添加Dropout层，随机丢弃50%。
+model.add(tf.keras.layers.Dropout(0.5))
 model.add(tf.keras.layers.Dense(10, activation=&apos;softmax&apos;))
 
 model.compile(optimizer=&apos;adam&apos;,
             loss = &apos;categorical_crossentropy&apos;,
-            metrics=[&apos;acc&apos;])</code></pre><p>进行训练。</p>
-<img src="https://s2.ax1x.com/2020/02/15/1zZbJs.png" width="50%">
+            metrics=[&apos;acc&apos;]) 
 
-<p>进行预测。predict每一项都是长度为10的数组，这个数组的每一项依次表示该图片是0-9标签的概率值。因此，该数组的最大项就是模型所预测的最后结果。调用<code>np.argmax(predict[0])</code>和<code>test_label[0]</code>发现都为9，表示预测正确。</p>
-<pre><code>predict = model.predict(test_image)
-np.argmax(predict[0])
-test_label[0]</code></pre>
+# 加入validation参数，表示加入验证集
+history = model.fit(train_image, train_label_onehot, epochs=10,
+                   validation_data=(test_image, test_label_onehot)) </code></pre><p>先前的训练结果：</p>
+<img src="https://s2.ax1x.com/2020/02/17/3iVEuR.png" width="60%">
+
+<img src="https://s2.ax1x.com/2020/02/17/3iVtVP.png" width="60%">
+
+<p>加入Dropout层抑制过拟合后的训练结果：</p>
+<img src="https://s2.ax1x.com/2020/02/17/3iVdPS.png" width="60%">
+
+<img src="https://s2.ax1x.com/2020/02/17/3iVBvj.png" width="60%">    
+
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>过拟合：在训练数据上得分很高，在测试数据上得分相对比较低。<br>欠拟合：在训练数据上得分比较低，在测试数据上得分也比较低。<br>应对过拟合的方法：使用Dropout来抑制。<br>应对欠拟合的方法：增加神经网络深度。</p>
+<h3 id="Drop的原理：人为丢弃一些单元"><a href="#Drop的原理：人为丢弃一些单元" class="headerlink" title="Drop的原理：人为丢弃一些单元"></a>Drop的原理：人为丢弃一些单元</h3><img src="https://s2.ax1x.com/2020/02/17/3iZTSg.png" width="60%">
+
+<h3 id="为什么Dropout可以解决过拟合？"><a href="#为什么Dropout可以解决过拟合？" class="headerlink" title="为什么Dropout可以解决过拟合？"></a>为什么Dropout可以解决过拟合？</h3><p>1.取平均的作用：先回到标准的模型.我们用相同的训练数据去训陈5个不同的神经网络，一般会得到5个不同的结果，<strong>此时我们可以采用“5个结果取均值”或者“多数取胜的投票策略”去决定最终结果</strong>。</p>
+<p>2.减少神经元之间复杂的共适应关系：因为 dropout程序导致两个神经元不一定每次都在一个 dropout网络中出现。这样<strong>权值的更新不再依赖于有固定关系的隐含节点的共同作用，阻止了某些特征仅仅在其它特定特征下才有效果的情况</strong>。</p>
+<p>3.Dropout类似于<strong>性别</strong>在生物进化中的角色：物种为了生存往往会倾向于适应这种环境，环境突变则会导致物种难以做岀及时反应，性别的岀现可以繁衍岀适应新环境的变种，有效的阻止过拟合，即避免环境改变时物种可能面临的灭绝。</p>
+<h3 id="参数选择原则："><a href="#参数选择原则：" class="headerlink" title="参数选择原则："></a>参数选择原则：</h3><p>理想的模型是刚好在欠拟合和过拟合的界线上，也就是正好拟合数据。</p>
+<p>首先开发一个过拟合的模型。方法：添加更多的层、增加每一层、训练更多轮次。<br>然后，抑制过拟合：Dropout、正则化、图像增加。最好的办法：增加训练数据。<br>再次，调节超参数：学习速率、隐藏单元数、训练轮次。</p>
+<p>超参数的选择是一个经验与不断测试的结果。经典机器学习的方法，如特征工程、增加训练数据也要做交叉验证。</p>
+<h3 id="构建网络的总原则："><a href="#构建网络的总原则：" class="headerlink" title="构建网络的总原则："></a>构建网络的总原则：</h3><p>一、增大网络容量，直到过拟合<br>二、采取措施抑制过拟合<br>三、继续增大网络容量，直到过拟合</p>
+<p>此外可以利用<strong>正则化</strong>控制网络规模。</p>
+
       
       <!-- reward -->
       
@@ -213,7 +222,7 @@ test_label[0]</code></pre>
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/02/15/Tensorflow2-0-softmax%E5%A4%9A%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98%E5%AE%9E%E7%8E%B0/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/02/17/tensorflow2-0-Dropout%E6%8A%91%E5%88%B6%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E8%B6%85%E5%8F%82%E6%95%B0%E9%80%89%E6%8B%A9/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -229,19 +238,10 @@ test_label[0]</code></pre>
   
   <nav class="article-nav">
     
-      <a href="/2020/02/17/tensorflow2-0-%E4%BC%98%E5%8C%96%E5%87%BD%E6%95%B0%E3%80%81%E5%AD%A6%E4%B9%A0%E9%80%9F%E7%8E%87%E3%80%81%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            tensorflow2.0-优化函数、学习速率、反向传播算法
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/02/14/Tensorflow2-0-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E5%AE%9E%E7%8E%B0/" class="article-nav-link">
+      <a href="/2020/02/17/tensorflow2-0-%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96%E4%B8%8E%E8%B6%85%E5%8F%82%E6%95%B0%E9%80%89%E6%8B%A9/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Tensorflow2.0 逻辑回归实现</div>
+        <div class="article-nav-title">tensorflow2.0 网络优化与超参数选择</div>
       </a>
     
   </nav>
