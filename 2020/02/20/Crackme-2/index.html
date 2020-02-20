@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    tensorflow2.0 Dropout抑制过拟合与超参数选择 |  Ayer
+    Crackme_2 |  Ayer
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -33,7 +33,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-tensorflow2-0-Dropout抑制过拟合与超参数选择" class="article article-type-post" itemscope
+  <article id="post-Crackme-2" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -41,7 +41,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  tensorflow2.0 Dropout抑制过拟合与超参数选择
+  Crackme_2
 </h1>
   
 
@@ -50,8 +50,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/02/17/tensorflow2-0-Dropout%E6%8A%91%E5%88%B6%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E8%B6%85%E5%8F%82%E6%95%B0%E9%80%89%E6%8B%A9/" class="article-date">
-  <time datetime="2020-02-17T12:44:36.000Z" itemprop="datePublished">2020-02-17</time>
+      <a href="/2020/02/20/Crackme-2/" class="article-date">
+  <time datetime="2020-02-20T12:51:46.000Z" itemprop="datePublished">2020-02-20</time>
 </a>
       
       
@@ -61,7 +61,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">895字</span>
+            <span class="post-count">729字</span>
         </span>
     </span>
 
@@ -70,7 +70,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">3分钟</span>
+            <span class="post-count">2分钟</span>
         </span>
     </span>
 </div>
@@ -97,66 +97,20 @@
       
 
       
-      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av62215565?p=9" target="_blank" rel="noopener">B站教程</a></h3><p>我们仍是通过之前的Fashion-Mnist数据集理解<code>Dropout</code>是如何抑制过拟合的。</p>
-<p>导入模块。</p>
-<pre><code>import tensorflow as tf 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-%matplotlib inline
-
-fashion_mnist = tf.keras.datasets.fashion_mnist.load_data()
-(train_image, train_label), (test_image, test_label) = fashion_mnist
-
-# 归一化 灰度区间是0-255
-train_image = train_image/255
-test_image = test_image/255
-
-train_label_onehot = tf.keras.utils.to_categorical(train_label)
-test_label_onehot = tf.keras.utils.to_categorical(test_label)</code></pre><p>注意这里相比较之前的代码，增加了Dropout层。</p>
-<pre><code># train_label已经变为独热编码，所以编译时损失函数应当使用categorical_crossentropy
-
-model = tf.keras.Sequential()
-model.add(tf.keras.layers.Flatten(input_shape=(28,28)))
-model.add(tf.keras.layers.Dense(128, activation=&apos;relu&apos;))
-# 添加Dropout层，随机丢弃50%。
-model.add(tf.keras.layers.Dropout(0.5))
-model.add(tf.keras.layers.Dense(128, activation=&apos;relu&apos;))
-# 添加Dropout层，随机丢弃50%。
-model.add(tf.keras.layers.Dropout(0.5))
-model.add(tf.keras.layers.Dense(128, activation=&apos;relu&apos;))
-# 添加Dropout层，随机丢弃50%。
-model.add(tf.keras.layers.Dropout(0.5))
-model.add(tf.keras.layers.Dense(10, activation=&apos;softmax&apos;))
-
-model.compile(optimizer=&apos;adam&apos;,
-            loss = &apos;categorical_crossentropy&apos;,
-            metrics=[&apos;acc&apos;]) 
-
-# 加入validation参数，表示加入验证集
-history = model.fit(train_image, train_label_onehot, epochs=10,
-                   validation_data=(test_image, test_label_onehot)) </code></pre><p>先前的训练结果：</p>
-<img src="https://s2.ax1x.com/2020/02/17/3iVEuR.png" width="60%">
-
-<img src="https://s2.ax1x.com/2020/02/17/3iVtVP.png" width="60%">
-
-<p>加入Dropout层抑制过拟合后的训练结果：</p>
-<img src="https://s2.ax1x.com/2020/02/17/3iVdPS.png" width="60%">
-
-<img src="https://s2.ax1x.com/2020/02/17/3iVBvj.png" width="60%">    
-
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>过拟合：在训练数据上得分很高，在测试数据上得分相对比较低。<br>欠拟合：在训练数据上得分比较低，在测试数据上得分也比较低。<br>应对过拟合的方法：使用Dropout来抑制。<br>应对欠拟合的方法：增加神经网络深度。</p>
-<h3 id="Drop的原理：人为丢弃一些单元"><a href="#Drop的原理：人为丢弃一些单元" class="headerlink" title="Drop的原理：人为丢弃一些单元"></a>Drop的原理：人为丢弃一些单元</h3><img src="https://s2.ax1x.com/2020/02/17/3iZTSg.png" width="60%">
-
-<h3 id="为什么Dropout可以解决过拟合？"><a href="#为什么Dropout可以解决过拟合？" class="headerlink" title="为什么Dropout可以解决过拟合？"></a>为什么Dropout可以解决过拟合？</h3><p>1.取平均的作用：先回到标准的模型.我们用相同的训练数据去训陈5个不同的神经网络，一般会得到5个不同的结果，<strong>此时我们可以采用“5个结果取均值”或者“多数取胜的投票策略”去决定最终结果</strong>。</p>
-<p>2.减少神经元之间复杂的共适应关系：因为 dropout程序导致两个神经元不一定每次都在一个 dropout网络中出现。这样<strong>权值的更新不再依赖于有固定关系的隐含节点的共同作用，阻止了某些特征仅仅在其它特定特征下才有效果的情况</strong>。</p>
-<p>3.Dropout类似于<strong>性别</strong>在生物进化中的角色：物种为了生存往往会倾向于适应这种环境，环境突变则会导致物种难以做岀及时反应，性别的岀现可以繁衍岀适应新环境的变种，有效的阻止过拟合，即避免环境改变时物种可能面临的灭绝。</p>
-<h3 id="参数选择原则："><a href="#参数选择原则：" class="headerlink" title="参数选择原则："></a>参数选择原则：</h3><p>理想的模型是刚好在欠拟合和过拟合的界线上，也就是正好拟合数据。</p>
-<p>首先开发一个过拟合的模型。方法：添加更多的层、增加每一层、训练更多轮次。<br>然后，抑制过拟合：Dropout、正则化、图像增加。最好的办法：增加训练数据。<br>再次，调节超参数：学习速率、隐藏单元数、训练轮次。</p>
-<p>超参数的选择是一个经验与不断测试的结果。经典机器学习的方法，如特征工程、增加训练数据也要做交叉验证。</p>
-<h3 id="构建网络的总原则："><a href="#构建网络的总原则：" class="headerlink" title="构建网络的总原则："></a>构建网络的总原则：</h3><p>一、增大网络容量，直到过拟合<br>二、采取措施抑制过拟合<br>三、继续增大网络容量，直到过拟合</p>
-<p>此外可以利用<strong>正则化</strong>控制网络规模。</p>
+      <h1 id="第二个CrackMe"><a href="#第二个CrackMe" class="headerlink" title="第二个CrackMe"></a>第二个CrackMe</h1><h3 id="0x00-初步查壳"><a href="#0x00-初步查壳" class="headerlink" title="0x00 初步查壳"></a>0x00 初步查壳</h3><p>  <img src="https://img-blog.csdnimg.cn/2019042709530249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_12,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p> <img src="https://img-blog.csdnimg.cn/20190427101529926.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  无壳。但发现了MD5函数，后面要注意。<br>  先直接利用IDA静态分析。</p>
+<h3 id="0x01-静态分析"><a href="#0x01-静态分析" class="headerlink" title="0x01 静态分析"></a>0x01 静态分析</h3><p>  拖入IDA，发现DialogFunc函数，点开分析。<br>  <img src="https://img-blog.csdnimg.cn/20190427095647844.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_12,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  利用关键字符串，大致找到程序入口。</p>
+<h3 id="0x02-动态分析"><a href="#0x02-动态分析" class="headerlink" title="0x02 动态分析"></a>0x02 动态分析</h3><p>  拖入OD，定位至00401AAA,函数主体部分应该就在这附近了。<br>  <img src="https://img-blog.csdnimg.cn/20190427100334404.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>  往上翻一翻，看看能否找到关键函数。<br><img src="https://img-blog.csdnimg.cn/2019042710124424.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  果然发现两个GetDlgItemTextA函数，都断下试试。<br><img src="https://img-blog.csdnimg.cn/20190427101408337.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="随便输入姓名和注册码"></p>
+<p> 随便输入姓名和注册码，按F9，发现两个点都被断下，但并未在寄存器中找到明显与注册码相关的数字。<br><img src="https://img-blog.csdnimg.cn/20190427102053977.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>继续往下查看，注意00401B13和00401B18两处的call函数，比较关键。跟入查看。果然在第二个call函数cm2.00401B79处发现端倪。<br><img src="https://img-blog.csdnimg.cn/20190427102405591.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="0x03-算法简单分析"><a href="#0x03-算法简单分析" class="headerlink" title="0x03 算法简单分析"></a>0x03 算法简单分析</h3><p>为了理解这里的四段函数，我们需要引入MD5的概念。</p>
+<blockquote>
+<p>1、数据初始化过程 首先要对需加密消息进行数据填充，使消息的长度对 512取模后等于448，消息长度 mod 512=448。不足位数 在消息（字符串）后面进行填充，填充第一位为1，其 余为0。即第一个字节为0x80,其余字节为0x00。<br> 2、添加消息长度 再填充上原消息的长度，例如欲加密字符为16个ASCII， 即16字节×8位=128位，16进制：0x80,但它是一个 QWORD值，占用8个字节。在此步骤进行完毕后，最 终消息长度就是512的整数倍。<br> 3、数据加密处理 准备需要用到的数据： 4个种子值： A = 0x67452301, B = 0xEFCDAB89, C = 0x98BADCFE, D = 0x10325476; 4个函数：F(X,Y,Z)=(X &amp; Y) | ((<del>X) &amp; Z); G(X,Y,Z)=(X &amp; Z) | (Y &amp; (</del>Z)); H(X,Y,Z)=X ^ Y ^ Z; I(X,Y,Z)=Y ^ (X | (~Z)); 把消息分以512位为一分组进行处理，每一个分组进行4轮变换， 以上面所说4个常数为起始变量进行计算，重新输出4个变量，以 这4个变量再进行下一分组的运算，如果已经是最后一个分组，则 这4个变量为最后的结果，即MD5值。</p>
+</blockquote>
+<p>由MD5加密的概念我们可以知道，这四组函数便是四个种子值，我们回到函数主体部分继续分析。<br><img src="https://img-blog.csdnimg.cn/20190427102750558.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">由jnz可知，只要eax中字符串不为0则不跳转，即可跳出注册码成功的消息框。其实这题的答案已经很明显，就是String2，不过以我目前的水平还很难解释String2是如何计算出的……同时，经过测试，不同的name会产生不同的String2，这也进一步验证了此crackme的md5算法。</p>
+<p><img src="https://img-blog.csdnimg.cn/20190427103536737.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p>结束。</p>
+<h3 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h3><p>不同的CrackMe总是有着不同的算法，还是那句话，能不爆破尽量不爆破，多分析加密算法才能更好地提升自我。</p>
 
       
       <!-- reward -->
@@ -222,7 +176,7 @@ history = model.fit(train_image, train_label_onehot, epochs=10,
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/02/17/tensorflow2-0-Dropout%E6%8A%91%E5%88%B6%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E8%B6%85%E5%8F%82%E6%95%B0%E9%80%89%E6%8B%A9/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/02/20/Crackme-2/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -238,19 +192,10 @@ history = model.fit(train_image, train_label_onehot, epochs=10,
   
   <nav class="article-nav">
     
+    
       <a href="/2020/02/20/Crackme-1/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            Crackme_1
-          
-        </div>
-      </a>
-    
-    
-      <a href="/2020/02/17/tensorflow2-0-%E7%BD%91%E7%BB%9C%E4%BC%98%E5%8C%96%E4%B8%8E%E8%B6%85%E5%8F%82%E6%95%B0%E9%80%89%E6%8B%A9/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">tensorflow2.0 网络优化与超参数选择</div>
+        <div class="article-nav-title">Crackme_1</div>
       </a>
     
   </nav>
