@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Crackme_2 |  Ayer
+    数据结构单链表相关题目 |  Ayer
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -33,7 +33,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-Crackme-2" class="article article-type-post" itemscope
+  <article id="post-数据结构单链表相关题目" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -41,7 +41,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Crackme_2
+  数据结构单链表相关题目
 </h1>
   
 
@@ -50,8 +50,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/02/20/Crackme-2/" class="article-date">
-  <time datetime="2020-02-20T12:51:46.000Z" itemprop="datePublished">2020-02-20</time>
+      <a href="/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" class="article-date">
+  <time datetime="2020-02-23T09:08:04.000Z" itemprop="datePublished">2020-02-23</time>
 </a>
       
       
@@ -61,7 +61,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">729字</span>
+            <span class="post-count">665字</span>
         </span>
     </span>
 
@@ -70,7 +70,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">2分钟</span>
+            <span class="post-count">3分钟</span>
         </span>
     </span>
 </div>
@@ -97,21 +97,124 @@
       
 
       
-      <h1 id="第二个CrackMe"><a href="#第二个CrackMe" class="headerlink" title="第二个CrackMe"></a>第二个CrackMe</h1><h3 id="0x00-初步查壳"><a href="#0x00-初步查壳" class="headerlink" title="0x00 初步查壳"></a>0x00 初步查壳</h3><p>  <img src="https://img-blog.csdnimg.cn/2019042709530249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_12,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p> <img src="https://img-blog.csdnimg.cn/20190427101529926.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  无壳。但发现了MD5函数，后面要注意。<br>  先直接利用IDA静态分析。</p>
-<h3 id="0x01-静态分析"><a href="#0x01-静态分析" class="headerlink" title="0x01 静态分析"></a>0x01 静态分析</h3><p>  拖入IDA，发现DialogFunc函数，点开分析。<br>  <img src="https://img-blog.csdnimg.cn/20190427095647844.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_12,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  利用关键字符串，大致找到程序入口。</p>
-<h3 id="0x02-动态分析"><a href="#0x02-动态分析" class="headerlink" title="0x02 动态分析"></a>0x02 动态分析</h3><p>  拖入OD，定位至00401AAA,函数主体部分应该就在这附近了。<br>  <img src="https://img-blog.csdnimg.cn/20190427100334404.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>  往上翻一翻，看看能否找到关键函数。<br><img src="https://img-blog.csdnimg.cn/2019042710124424.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  果然发现两个GetDlgItemTextA函数，都断下试试。<br><img src="https://img-blog.csdnimg.cn/20190427101408337.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="随便输入姓名和注册码"></p>
-<p> 随便输入姓名和注册码，按F9，发现两个点都被断下，但并未在寄存器中找到明显与注册码相关的数字。<br><img src="https://img-blog.csdnimg.cn/20190427102053977.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>继续往下查看，注意00401B13和00401B18两处的call函数，比较关键。跟入查看。果然在第二个call函数cm2.00401B79处发现端倪。<br><img src="https://img-blog.csdnimg.cn/20190427102405591.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h3 id="0x03-算法简单分析"><a href="#0x03-算法简单分析" class="headerlink" title="0x03 算法简单分析"></a>0x03 算法简单分析</h3><p>为了理解这里的四段函数，我们需要引入MD5的概念。</p>
-<blockquote>
-<p>1、数据初始化过程 首先要对需加密消息进行数据填充，使消息的长度对 512取模后等于448，消息长度 mod 512=448。不足位数 在消息（字符串）后面进行填充，填充第一位为1，其 余为0。即第一个字节为0x80,其余字节为0x00。<br> 2、添加消息长度 再填充上原消息的长度，例如欲加密字符为16个ASCII， 即16字节×8位=128位，16进制：0x80,但它是一个 QWORD值，占用8个字节。在此步骤进行完毕后，最 终消息长度就是512的整数倍。<br> 3、数据加密处理 准备需要用到的数据： 4个种子值： A = 0x67452301, B = 0xEFCDAB89, C = 0x98BADCFE, D = 0x10325476; 4个函数：F(X,Y,Z)=(X &amp; Y) | ((<del>X) &amp; Z); G(X,Y,Z)=(X &amp; Z) | (Y &amp; (</del>Z)); H(X,Y,Z)=X ^ Y ^ Z; I(X,Y,Z)=Y ^ (X | (~Z)); 把消息分以512位为一分组进行处理，每一个分组进行4轮变换， 以上面所说4个常数为起始变量进行计算，重新输出4个变量，以 这4个变量再进行下一分组的运算，如果已经是最后一个分组，则 这4个变量为最后的结果，即MD5值。</p>
-</blockquote>
-<p>由MD5加密的概念我们可以知道，这四组函数便是四个种子值，我们回到函数主体部分继续分析。<br><img src="https://img-blog.csdnimg.cn/20190427102750558.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">由jnz可知，只要eax中字符串不为0则不跳转，即可跳出注册码成功的消息框。其实这题的答案已经很明显，就是String2，不过以我目前的水平还很难解释String2是如何计算出的……同时，经过测试，不同的name会产生不同的String2，这也进一步验证了此crackme的md5算法。</p>
-<p><img src="https://img-blog.csdnimg.cn/20190427103536737.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>结束。</p>
-<h3 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h3><p>不同的CrackMe总是有着不同的算法，还是那句话，能不爆破尽量不爆破，多分析加密算法才能更好地提升自我。</p>
+      <h3 id="资料来源：CSDN"><a href="#资料来源：CSDN" class="headerlink" title="资料来源：CSDN"></a>资料来源：<a href="https://blog.csdn.net/weixin_44796147/article/details/100824206" target="_blank" rel="noopener">CSDN</a></h3><h2 id="题目一"><a href="#题目一" class="headerlink" title="题目一"></a>题目一</h2><p>完成下列算法填空，将两个有序递增的带表头结点的单链表合并为一个有序递增的单链表。<br>链表结点Node和链表SingleList结构体定义如下：</p>
+<pre><code>typedef struct node
+{
+    ElemType element;
+    struct node *link;
+}Node;
+typedef struct headerlist
+{
+    Node *head;
+    int n;
+}HeaderList;
 
+void MergeList1(HeaderList *La,HeaderList *Lb,HeaderList *Lc) { 
+    //合并链表La和Lb，合并后的新表使用头指针Lc指向 
+    Node *pa,*pb,*pc,*q;
+    pa=La-&gt;head-&gt;link; 
+    pb=Lb-&gt;head-&gt;link; 
+    pc=Lc-&gt;head; 
+    while(pa &amp;&amp; pb) {
+        if(____________________) { 
+            pc-&gt;link=pa; 
+            pc=pa; 
+            pa=pa-&gt;link; 
+            La-&gt;n--; 
+        }
+        else if(pa-&gt;element&gt;pb-&gt;element) { 
+            pc-&gt;link=___________; 
+            pc=________; 
+            pb=_________;
+            Lb-&gt;n--; 
+        } 
+        else { 
+            pc-&gt;link=pa; 
+            pc=pa; 
+            pa=_________; 
+            q=_________; 
+            free(pb); 
+            pb =q;
+        } 
+        Lc-&gt;n++; 
+    } 
+    pc-&gt;link=pa?pa:pb; //插入剩余段 Lc-&gt;n+=pa?La-&gt;n:Lb-&gt;n; 
+}</code></pre><p>解答</p>
+<pre><code>while(pa &amp;&amp; pb) {
+    if(pa-&gt;element&lt;pb-&gt;element) { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=pa-&gt;link; 
+        La-&gt;n--; }
+    else if(pa-&gt;element&gt;pb-&gt;element) { 
+        pc-&gt;link=___pb___; 
+        pc=__pb__; 
+        pb=__pb-&gt;link___;
+        Lb-&gt;n--; } 
+    else { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=__pa-&gt;link__; 
+        q=__pb-&gt;link__; 
+        free(pb); 
+        pb =q; } 
+Lc-&gt;n++; } 
+pc-&gt;link=pa?pa:pb;
+}</code></pre><p>这里的思路是源于​L-&gt;first=NULL; 题目要把链表首地址置为空，是要重新排列链表。<br>第一次循环，将q指向第二个结点，把第一个结点取下，然后拼到链表头结点上，然后p指针向后移；<br>第二次循环，将q指向第三个结点，把第二个结点取下，然后拼到头结点后、第一个结点前，然后p指针后移。以此类推，直到p移到了原链表的尾部结束循环。</p>
+<h2 id="题目二"><a href="#题目二" class="headerlink" title="题目二"></a>题目二</h2><p>请完成算法填空，实现带表头结点的单链表形式实现的队列上的元素入队与出队操作，队列和元素结点结构体定义如下：</p>
+<pre><code>typedef struct node
+{
+    ElemType element; 
+    struct node* link;   
+}Node;
+typedef struct queue
+{
+    Node* front; //注意front指向表头结点，非头结点
+    Node* rear; //指向尾结点
+}Queue;
+
+void EnQueue(Queue *Q, ElemType x)
+{
+    Node* p= (Node*)malloc(sizeof(Node));
+    ____________ = x;
+    p-&gt;link = NULL;
+    ____________=p;
+    Q-&gt;rear=p;
+}
+
+void DeQueue(Queue *Q)
+{     
+    //若队列为空，直接返回
+    if(___________ ==NULL)  
+            return; 
+    Node *p=_____________;
+    Q-&gt;front-&gt;link=___________;
+    free(p);
+        //若出队后，队列为空，则需重置rear
+    if(______________==NULL)
+        Q-&gt;rear=Q-&gt;front;//指向表头结点  
+} </code></pre><p>解答</p>
+<pre><code>while(pa &amp;&amp; pb) {
+    if(pa-&gt;element&lt;pb-&gt;element) { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=pa-&gt;link; 
+        La-&gt;n--; }
+    else if(pa-&gt;element&gt;pb-&gt;element) { 
+        pc-&gt;link=___pb___; 
+        pc=__pb__; 
+        pb=__pb-&gt;link___;
+        Lb-&gt;n--; } 
+    else { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=__pa-&gt;link__; 
+        q=__pb-&gt;link__; 
+        free(pb); 
+        pb =q; } 
+Lc-&gt;n++; } 
+pc-&gt;link=pa?pa:pb;
+}</code></pre>
       
       <!-- reward -->
       
@@ -176,7 +279,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/02/20/Crackme-2/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -192,19 +295,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            数据结构单链表相关题目
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/02/20/Crackme-1/" class="article-nav-link">
+      <a href="/2020/02/20/Crackme-2/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Crackme_1</div>
+        <div class="article-nav-title">Crackme_2</div>
       </a>
     
   </nav>

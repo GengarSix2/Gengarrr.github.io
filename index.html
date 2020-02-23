@@ -67,6 +67,189 @@
     
     
     
+    <article id="post-数据结构单链表相关题目" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/"
+    >数据结构单链表相关题目</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" class="article-date">
+  <time datetime="2020-02-23T09:08:04.000Z" itemprop="datePublished">2020-02-23</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h3 id="资料来源：CSDN"><a href="#资料来源：CSDN" class="headerlink" title="资料来源：CSDN"></a>资料来源：<a href="https://blog.csdn.net/weixin_44796147/article/details/100824206" target="_blank" rel="noopener">CSDN</a></h3><h2 id="题目一"><a href="#题目一" class="headerlink" title="题目一"></a>题目一</h2><p>完成下列算法填空，将两个有序递增的带表头结点的单链表合并为一个有序递增的单链表。<br>链表结点Node和链表SingleList结构体定义如下：</p>
+<pre><code>typedef struct node
+{
+    ElemType element;
+    struct node *link;
+}Node;
+typedef struct headerlist
+{
+    Node *head;
+    int n;
+}HeaderList;
+
+void MergeList1(HeaderList *La,HeaderList *Lb,HeaderList *Lc) { 
+    //合并链表La和Lb，合并后的新表使用头指针Lc指向 
+    Node *pa,*pb,*pc,*q;
+    pa=La-&gt;head-&gt;link; 
+    pb=Lb-&gt;head-&gt;link; 
+    pc=Lc-&gt;head; 
+    while(pa &amp;&amp; pb) {
+        if(____________________) { 
+            pc-&gt;link=pa; 
+            pc=pa; 
+            pa=pa-&gt;link; 
+            La-&gt;n--; 
+        }
+        else if(pa-&gt;element&gt;pb-&gt;element) { 
+            pc-&gt;link=___________; 
+            pc=________; 
+            pb=_________;
+            Lb-&gt;n--; 
+        } 
+        else { 
+            pc-&gt;link=pa; 
+            pc=pa; 
+            pa=_________; 
+            q=_________; 
+            free(pb); 
+            pb =q;
+        } 
+        Lc-&gt;n++; 
+    } 
+    pc-&gt;link=pa?pa:pb; //插入剩余段 Lc-&gt;n+=pa?La-&gt;n:Lb-&gt;n; 
+}</code></pre><p>解答</p>
+<pre><code>while(pa &amp;&amp; pb) {
+    if(pa-&gt;element&lt;pb-&gt;element) { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=pa-&gt;link; 
+        La-&gt;n--; }
+    else if(pa-&gt;element&gt;pb-&gt;element) { 
+        pc-&gt;link=___pb___; 
+        pc=__pb__; 
+        pb=__pb-&gt;link___;
+        Lb-&gt;n--; } 
+    else { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=__pa-&gt;link__; 
+        q=__pb-&gt;link__; 
+        free(pb); 
+        pb =q; } 
+Lc-&gt;n++; } 
+pc-&gt;link=pa?pa:pb;
+}</code></pre><p>这里的思路是源于​L-&gt;first=NULL; 题目要把链表首地址置为空，是要重新排列链表。<br>第一次循环，将q指向第二个结点，把第一个结点取下，然后拼到链表头结点上，然后p指针向后移；<br>第二次循环，将q指向第三个结点，把第二个结点取下，然后拼到头结点后、第一个结点前，然后p指针后移。以此类推，直到p移到了原链表的尾部结束循环。</p>
+<h2 id="题目二"><a href="#题目二" class="headerlink" title="题目二"></a>题目二</h2><p>请完成算法填空，实现带表头结点的单链表形式实现的队列上的元素入队与出队操作，队列和元素结点结构体定义如下：</p>
+<pre><code>typedef struct node
+{
+    ElemType element; 
+    struct node* link;   
+}Node;
+typedef struct queue
+{
+    Node* front; //注意front指向表头结点，非头结点
+    Node* rear; //指向尾结点
+}Queue;
+
+void EnQueue(Queue *Q, ElemType x)
+{
+    Node* p= (Node*)malloc(sizeof(Node));
+    ____________ = x;
+    p-&gt;link = NULL;
+    ____________=p;
+    Q-&gt;rear=p;
+}
+
+void DeQueue(Queue *Q)
+{     
+    //若队列为空，直接返回
+    if(___________ ==NULL)  
+            return; 
+    Node *p=_____________;
+    Q-&gt;front-&gt;link=___________;
+    free(p);
+        //若出队后，队列为空，则需重置rear
+    if(______________==NULL)
+        Q-&gt;rear=Q-&gt;front;//指向表头结点  
+} </code></pre><p>解答</p>
+<pre><code>while(pa &amp;&amp; pb) {
+    if(pa-&gt;element&lt;pb-&gt;element) { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=pa-&gt;link; 
+        La-&gt;n--; }
+    else if(pa-&gt;element&gt;pb-&gt;element) { 
+        pc-&gt;link=___pb___; 
+        pc=__pb__; 
+        pb=__pb-&gt;link___;
+        Lb-&gt;n--; } 
+    else { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=__pa-&gt;link__; 
+        q=__pb-&gt;link__; 
+        free(pb); 
+        pb =q; } 
+Lc-&gt;n++; } 
+pc-&gt;link=pa?pa:pb;
+}</code></pre>
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Crackme-2" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
