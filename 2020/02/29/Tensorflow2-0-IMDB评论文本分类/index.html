@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    数据结构单链表相关题目 |  Ayer
+    Tensorflow2.0 IMDB评论文本分类 |  Ayer
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -33,7 +33,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-数据结构单链表相关题目" class="article article-type-post" itemscope
+  <article id="post-Tensorflow2-0-IMDB评论文本分类" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -41,7 +41,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  数据结构单链表相关题目
+  Tensorflow2.0 IMDB评论文本分类
 </h1>
   
 
@@ -50,8 +50,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" class="article-date">
-  <time datetime="2020-02-23T09:08:04.000Z" itemprop="datePublished">2020-02-23</time>
+      <a href="/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" class="article-date">
+  <time datetime="2020-02-29T08:54:06.000Z" itemprop="datePublished">2020-02-29</time>
 </a>
       
       
@@ -61,7 +61,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">665字</span>
+            <span class="post-count">711字</span>
         </span>
     </span>
 
@@ -97,124 +97,84 @@
       
 
       
-      <h3 id="资料来源：CSDN"><a href="#资料来源：CSDN" class="headerlink" title="资料来源：CSDN"></a>资料来源：<a href="https://blog.csdn.net/weixin_44796147/article/details/100824206" target="_blank" rel="noopener">CSDN</a></h3><h2 id="题目一"><a href="#题目一" class="headerlink" title="题目一"></a>题目一</h2><p>完成下列算法填空，将两个有序递增的带表头结点的单链表合并为一个有序递增的单链表。<br>链表结点Node和链表SingleList结构体定义如下：</p>
-<pre><code>typedef struct node
-{
-    ElemType element;
-    struct node *link;
-}Node;
-typedef struct headerlist
-{
-    Node *head;
-    int n;
-}HeaderList;
+      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av71867574" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-文本预处理"><a href="#0x00-文本预处理" class="headerlink" title="0x00 文本预处理"></a>0x00 文本预处理</h2><p>在对训练数据集之前，我们需要对训练文本进行预处理，很多时候预处理其实比训练本身要花费更多的时间…预处理代码如下：</p>
+<pre><code>import tensorflow as tf
+from tensorflow import keras
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
-void MergeList1(HeaderList *La,HeaderList *Lb,HeaderList *Lc) { 
-    //合并链表La和Lb，合并后的新表使用头指针Lc指向 
-    Node *pa,*pb,*pc,*q;
-    pa=La-&gt;head-&gt;link; 
-    pb=Lb-&gt;head-&gt;link; 
-    pc=Lc-&gt;head; 
-    while(pa &amp;&amp; pb) {
-        if(____________________) { 
-            pc-&gt;link=pa; 
-            pc=pa; 
-            pa=pa-&gt;link; 
-            La-&gt;n--; 
-        }
-        else if(pa-&gt;element&gt;pb-&gt;element) { 
-            pc-&gt;link=___________; 
-            pc=________; 
-            pb=_________;
-            Lb-&gt;n--; 
-        } 
-        else { 
-            pc-&gt;link=pa; 
-            pc=pa; 
-            pa=_________; 
-            q=_________; 
-            free(pb); 
-            pb =q;
-        } 
-        Lc-&gt;n++; 
-    } 
-    pc-&gt;link=pa?pa:pb; //插入剩余段 Lc-&gt;n+=pa?La-&gt;n:Lb-&gt;n; 
-}</code></pre><p>解答</p>
-<pre><code>while(pa &amp;&amp; pb) {
-    if(pa-&gt;element&lt;pb-&gt;element) { 
-        pc-&gt;link=pa; 
-        pc=pa; 
-        pa=pa-&gt;link; 
-        La-&gt;n--; }
-    else if(pa-&gt;element&gt;pb-&gt;element) { 
-        pc-&gt;link=___pb___; 
-        pc=__pb__; 
-        pb=__pb-&gt;link___;
-        Lb-&gt;n--; } 
-    else { 
-        pc-&gt;link=pa; 
-        pc=pa; 
-        pa=__pa-&gt;link__; 
-        q=__pb-&gt;link__; 
-        free(pb); 
-        pb =q; } 
-Lc-&gt;n++; } 
-pc-&gt;link=pa?pa:pb;
-}</code></pre><p>这里的思路是源于​L-&gt;first=NULL; 题目要把链表首地址置为空，是要重新排列链表。<br>第一次循环，将q指向第二个结点，把第一个结点取下，然后拼到链表头结点上，然后p指针向后移；<br>第二次循环，将q指向第三个结点，把第二个结点取下，然后拼到头结点后、第一个结点前，然后p指针后移。以此类推，直到p移到了原链表的尾部结束循环。</p>
-<h2 id="题目二"><a href="#题目二" class="headerlink" title="题目二"></a>题目二</h2><p>请完成算法填空，实现带表头结点的单链表形式实现的队列上的元素入队与出队操作，队列和元素结点结构体定义如下：</p>
-<pre><code>typedef struct node
-{
-    ElemType element; 
-    struct node* link;   
-}Node;
-typedef struct queue
-{
-    Node* front; //注意front指向表头结点，非头结点
-    Node* rear; //指向尾结点
-}Queue;
+data = tf.keras.datasets.imdb
+(train_data, train_labels), (test_data, test_labels) = data.load_data(num_words = 88000)
 
-void EnQueue(Queue *Q, ElemType x)
-{
-    Node* p= (Node*)malloc(sizeof(Node));
-    ____________ = x;
-    p-&gt;link = NULL;
-    ____________=p;
-    Q-&gt;rear=p;
-}
+word_index = data.get_word_index()
 
-void DeQueue(Queue *Q)
-{     
-    //若队列为空，直接返回
-    if(___________ ==NULL)  
-            return; 
-    Node *p=_____________;
-    Q-&gt;front-&gt;link=___________;
-    free(p);
-        //若出队后，队列为空，则需重置rear
-    if(______________==NULL)
-        Q-&gt;rear=Q-&gt;front;//指向表头结点  
-} </code></pre><p>解答</p>
-<pre><code>while(pa &amp;&amp; pb) {
-    if(pa-&gt;element&lt;pb-&gt;element) { 
-        pc-&gt;link=pa; 
-        pc=pa; 
-        pa=pa-&gt;link; 
-        La-&gt;n--; }
-    else if(pa-&gt;element&gt;pb-&gt;element) { 
-        pc-&gt;link=___pb___; 
-        pc=__pb__; 
-        pb=__pb-&gt;link___;
-        Lb-&gt;n--; } 
-    else { 
-        pc-&gt;link=pa; 
-        pc=pa; 
-        pa=__pa-&gt;link__; 
-        q=__pb-&gt;link__; 
-        free(pb); 
-        pb =q; } 
-Lc-&gt;n++; } 
-pc-&gt;link=pa?pa:pb;
-}</code></pre>
+word_index = {k:(v+3) for k,v in word_index.items()}
+word_index[&quot;&lt;PAD&gt;&quot;] = 0
+word_index[&quot;&lt;START&gt;&quot;] = 1
+word_index[&quot;&lt;UNK&gt;&quot;] = 2
+word_index[&quot;&lt;UNUSED&gt;&quot;] = 3
+
+reverse_word_index = dict([(value, key) for (key, value) in word_index.items()])
+
+train_data = keras.preprocessing.sequence.pad_sequences(train_data, value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
+test_data = keras.preprocessing.sequence.pad_sequences(test_data, value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
+
+def decode_review(text):
+    return &quot; &quot;.join([reverse_word_index.get(i, &quot;?&quot;) for i in text])</code></pre><h2 id="0x01-训练过程"><a href="#0x01-训练过程" class="headerlink" title="0x01 训练过程"></a>0x01 训练过程</h2><p><code>Embedding</code>层的作用：创建<strong>单词向量</strong>，并根据单词相关程度区分它们。   </p>
+<p><code>GlobalAverage1D</code>层的作用：将任何尺寸的数据放入其中并将其放在一个较低的维度。</p>
+<p><code>DENSE</code>层的作用：尝试对单词进行分类并掌握单词模式(pattern)，最终提升网络准确性(accuracy)</p>
+<p>其中<code>binary_cross_entropy</code>是二分类的交叉熵，实际是多分类<code>softmax_cross_entropy</code>的一种特殊情况，当多分类中，类别只有两类时，即0或者1，即为二分类，二分类也是一个逻辑回归问题，也可以套用逻辑回归的损失函数。</p>
+<p>model.fit中的batch_size：一轮训练的数据量。<br>    # model down here</p>
+<pre><code>model = keras.Sequential()
+model.add(keras.layers.Embedding(88000, 16))
+model.add(keras.layers.GlobalAveragePooling1D())
+model.add(keras.layers.Dense(16, activation=&apos;relu&apos;))
+model.add(keras.layers.Dense(1, activation=&apos;sigmoid&apos;))
+
+model.summary()
+model.compile(optimizer=&quot;adam&quot;, loss=&quot;binary_crossentropy&quot;, metrics=[&quot;accuracy&quot;])</code></pre><p>整个模型结构如下：</p>
+<img src="https://s2.ax1x.com/2020/02/29/3yBnc6.png" width="60%">
+
+
+<p>验证集选取前10000，训练集选取10000以后的。</p>
+<pre><code>x_val = train_data[:10000]
+x_train = train_data[10000:]
+
+y_val = train_labels[:10000]
+y_train = train_labels[10000:]
+
+fitModel = model.fit(x_train, y_train,epochs=40, batch_size=512,
+                    validation_data=(x_val, y_val), verbose=1)
+
+results = model.evaluate(test_data, test_labels)</code></pre><p>最后训练得出损失值是<code>0.3283079787778854</code>，正确率是<code>0.87256</code>。</p>
+<h2 id="0x02-保存模型"><a href="#0x02-保存模型" class="headerlink" title="0x02 保存模型"></a>0x02 保存模型</h2><p>用如下的代码便可以很轻松的保存模型，保存在当前目录下。</p>
+<pre><code>model.save(&quot;model.h5&quot;) 
+model = keras.models.load_model(&quot;model.h5&quot;)</code></pre><h2 id="0x03-模型测试"><a href="#0x03-模型测试" class="headerlink" title="0x03 模型测试"></a>0x03 模型测试</h2><p>打开测试集文件，同样注意要进行文本预处理，<strong>细节</strong>很重要。</p>
+<pre><code>def review_encode(s):
+    encoded = [1]
+
+    for word in s:
+        if word.lower() in word_index:
+            encoded.append(word_index[word.lower()])
+        else:
+            encoded.append(2)
+
+    return encoded
+
+
+with open(&quot;test.txt&quot;, encoding=&quot;utf-8&quot;) as f:
+    for line in f.readlines():
+        nline = line.replace(&quot;,&quot;,&quot;&quot;).replace(&quot;.&quot;, &quot;&quot;).replace(&quot;(&quot;,&quot;&quot;).replace(&quot;)&quot;,&quot;&quot;).replace(&quot;:&quot;,&quot;&quot;).replace(&quot;\&quot;&quot;,&quot;&quot;).strip().split(&quot; &quot;)
+
+        encode = review_encode(nline)
+
+        encode = keras.preprocessing.sequence.pad_sequences([encode], value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
+        predict = model.predict(encode)
+        print(line)
+        print(encode)
+        print(predict[0])    </code></pre><p>最终得到的预测结果是<code>0.93312705</code>，表明是positive的评论。 </p>
+
       
       <!-- reward -->
       
@@ -279,7 +239,7 @@ pc-&gt;link=pa?pa:pb;
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -295,19 +255,10 @@ pc-&gt;link=pa?pa:pb;
   
   <nav class="article-nav">
     
-      <a href="/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            Tensorflow2.0 IMDB评论文本分类
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/02/20/Crackme-2/" class="article-nav-link">
+      <a href="/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Crackme_2</div>
+        <div class="article-nav-title">数据结构单链表相关题目</div>
       </a>
     
   </nav>

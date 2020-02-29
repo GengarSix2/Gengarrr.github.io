@@ -67,6 +67,149 @@
     
     
     
+    <article id="post-Tensorflow2-0-IMDB评论文本分类" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/"
+    >Tensorflow2.0 IMDB评论文本分类</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" class="article-date">
+  <time datetime="2020-02-29T08:54:06.000Z" itemprop="datePublished">2020-02-29</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av71867574" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-文本预处理"><a href="#0x00-文本预处理" class="headerlink" title="0x00 文本预处理"></a>0x00 文本预处理</h2><p>在对训练数据集之前，我们需要对训练文本进行预处理，很多时候预处理其实比训练本身要花费更多的时间…预处理代码如下：</p>
+<pre><code>import tensorflow as tf
+from tensorflow import keras
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+data = tf.keras.datasets.imdb
+(train_data, train_labels), (test_data, test_labels) = data.load_data(num_words = 88000)
+
+word_index = data.get_word_index()
+
+word_index = {k:(v+3) for k,v in word_index.items()}
+word_index[&quot;&lt;PAD&gt;&quot;] = 0
+word_index[&quot;&lt;START&gt;&quot;] = 1
+word_index[&quot;&lt;UNK&gt;&quot;] = 2
+word_index[&quot;&lt;UNUSED&gt;&quot;] = 3
+
+reverse_word_index = dict([(value, key) for (key, value) in word_index.items()])
+
+train_data = keras.preprocessing.sequence.pad_sequences(train_data, value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
+test_data = keras.preprocessing.sequence.pad_sequences(test_data, value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
+
+def decode_review(text):
+    return &quot; &quot;.join([reverse_word_index.get(i, &quot;?&quot;) for i in text])</code></pre><h2 id="0x01-训练过程"><a href="#0x01-训练过程" class="headerlink" title="0x01 训练过程"></a>0x01 训练过程</h2><p><code>Embedding</code>层的作用：创建<strong>单词向量</strong>，并根据单词相关程度区分它们。   </p>
+<p><code>GlobalAverage1D</code>层的作用：将任何尺寸的数据放入其中并将其放在一个较低的维度。</p>
+<p><code>DENSE</code>层的作用：尝试对单词进行分类并掌握单词模式(pattern)，最终提升网络准确性(accuracy)</p>
+<p>其中<code>binary_cross_entropy</code>是二分类的交叉熵，实际是多分类<code>softmax_cross_entropy</code>的一种特殊情况，当多分类中，类别只有两类时，即0或者1，即为二分类，二分类也是一个逻辑回归问题，也可以套用逻辑回归的损失函数。</p>
+<p>model.fit中的batch_size：一轮训练的数据量。<br>    # model down here</p>
+<pre><code>model = keras.Sequential()
+model.add(keras.layers.Embedding(88000, 16))
+model.add(keras.layers.GlobalAveragePooling1D())
+model.add(keras.layers.Dense(16, activation=&apos;relu&apos;))
+model.add(keras.layers.Dense(1, activation=&apos;sigmoid&apos;))
+
+model.summary()
+model.compile(optimizer=&quot;adam&quot;, loss=&quot;binary_crossentropy&quot;, metrics=[&quot;accuracy&quot;])</code></pre><p>整个模型结构如下：</p>
+<img src="https://s2.ax1x.com/2020/02/29/3yBnc6.png" width="60%">
+
+
+<p>验证集选取前10000，训练集选取10000以后的。</p>
+<pre><code>x_val = train_data[:10000]
+x_train = train_data[10000:]
+
+y_val = train_labels[:10000]
+y_train = train_labels[10000:]
+
+fitModel = model.fit(x_train, y_train,epochs=40, batch_size=512,
+                    validation_data=(x_val, y_val), verbose=1)
+
+results = model.evaluate(test_data, test_labels)</code></pre><p>最后训练得出损失值是<code>0.3283079787778854</code>，正确率是<code>0.87256</code>。</p>
+<h2 id="0x02-保存模型"><a href="#0x02-保存模型" class="headerlink" title="0x02 保存模型"></a>0x02 保存模型</h2><p>用如下的代码便可以很轻松的保存模型，保存在当前目录下。</p>
+<pre><code>model.save(&quot;model.h5&quot;) 
+model = keras.models.load_model(&quot;model.h5&quot;)</code></pre><h2 id="0x03-模型测试"><a href="#0x03-模型测试" class="headerlink" title="0x03 模型测试"></a>0x03 模型测试</h2><p>打开测试集文件，同样注意要进行文本预处理，<strong>细节</strong>很重要。</p>
+<pre><code>def review_encode(s):
+    encoded = [1]
+
+    for word in s:
+        if word.lower() in word_index:
+            encoded.append(word_index[word.lower()])
+        else:
+            encoded.append(2)
+
+    return encoded
+
+
+with open(&quot;test.txt&quot;, encoding=&quot;utf-8&quot;) as f:
+    for line in f.readlines():
+        nline = line.replace(&quot;,&quot;,&quot;&quot;).replace(&quot;.&quot;, &quot;&quot;).replace(&quot;(&quot;,&quot;&quot;).replace(&quot;)&quot;,&quot;&quot;).replace(&quot;:&quot;,&quot;&quot;).replace(&quot;\&quot;&quot;,&quot;&quot;).strip().split(&quot; &quot;)
+
+        encode = review_encode(nline)
+
+        encode = keras.preprocessing.sequence.pad_sequences([encode], value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
+        predict = model.predict(encode)
+        print(line)
+        print(encode)
+        print(predict[0])    </code></pre><p>最终得到的预测结果是<code>0.93312705</code>，表明是positive的评论。 </p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-数据结构单链表相关题目" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
