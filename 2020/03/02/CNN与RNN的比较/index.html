@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Tensorflow2.0 IMDB评论文本分类 |  Ayer
+    CNN与RNN的比较 |  Ayer
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -33,7 +33,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-Tensorflow2-0-IMDB评论文本分类" class="article article-type-post" itemscope
+  <article id="post-CNN与RNN的比较" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -41,7 +41,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Tensorflow2.0 IMDB评论文本分类
+  CNN与RNN的比较
 </h1>
   
 
@@ -50,8 +50,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" class="article-date">
-  <time datetime="2020-02-29T08:54:06.000Z" itemprop="datePublished">2020-02-29</time>
+      <a href="/2020/03/02/CNN%E4%B8%8ERNN%E7%9A%84%E6%AF%94%E8%BE%83/" class="article-date">
+  <time datetime="2020-03-02T13:53:33.000Z" itemprop="datePublished">2020-03-02</time>
 </a>
       
       
@@ -61,7 +61,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">711字</span>
+            <span class="post-count">1.1k字</span>
         </span>
     </span>
 
@@ -97,84 +97,31 @@
       
 
       
-      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av71867574" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-文本预处理"><a href="#0x00-文本预处理" class="headerlink" title="0x00 文本预处理"></a>0x00 文本预处理</h2><p>在对训练数据集之前，我们需要对训练文本进行预处理，很多时候预处理其实比训练本身要花费更多的时间…预处理代码如下：</p>
-<pre><code>import tensorflow as tf
-from tensorflow import keras
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
+      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av74959887?p=80" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-CNN-卷积神经网络"><a href="#0x00-CNN-卷积神经网络" class="headerlink" title="0x00 CNN:卷积神经网络"></a>0x00 CNN:卷积神经网络</h2><p><a href="https://blog.csdn.net/qq_36501027/article/details/83211682" target="_blank" rel="noopener">CSDN参考链接</a></p>
+<p>一般用于<strong>图像识别，视觉数据(visual data)</strong>。</p>
+<img src="https://s2.ax1x.com/2020/03/02/3fiUcq.png" width="60%">
 
-data = tf.keras.datasets.imdb
-(train_data, train_labels), (test_data, test_labels) = data.load_data(num_words = 88000)
+<p>卷积神经网络的主要组成部分有：输入层、卷积层、池化层、全连接层。其中重点是卷积层与池化层。</p>
+<h3 id="卷积层："><a href="#卷积层：" class="headerlink" title="卷积层："></a>卷积层：</h3><p>卷积层是卷积神经网络（CNN）的核心，但是什么是卷积呢？卷积就是图片中的局部数据和卷积核的内积，它是为了提取图片局部的特征，那卷积核又是什么呢？卷积核又称过滤器（filter），如下图，其实就是一组带有固定的权重的神经元，一组二维矩阵，用来提取一组特定的特征，提取的特征一般称为feature map（特征映射）。至于卷积层就是多个filter的叠加形成的，至于通道就是理解为视角、角度。例如同样是提取边界特征的卷积核，可以按照R、G、B三种元素的角度提取边界，RGB在边界这个角度上有不同的表达；再比如需要检查一个人的机器学习能力，可以从特征工程、模型选择、参数调优等多个方面检测。（最初输入的图片样本的 channels，取决于图片类型，比如RGB；卷积操作完成后输出的 out_channels ，取决于卷积核的数量。此时的 out_channels 也会作为下一次卷积时的卷积核的 in_channels；卷积核中的 in_channels ，就是上一次卷积的 out_channels ，如果是第一次做卷积，就是样本图片的channels）</p>
+<img src="https://img-blog.csdn.net/20181021175409140?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2NTAxMDI3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" width="60%">
 
-word_index = data.get_word_index()
+<p>至于卷积层的参数问题，就不得不提CNN的两大“特色”了，局部感知和权值共享！在BPNN里，我们可以看见一张图片假如它是黑白的，也就是100x100x1，而隐藏层的节点数是100个，那也就是说权重就高达100x100x1x100+100=1000100个，这还是比较小的单通道图片，在现在这种小图片很少了，所以在CNN里必须的精简参数了，不然难以训练出一个好的模型！为了解决这个问题。，CNN就提出了<strong>局部感知</strong>和<strong>权值共享</strong>两个方法。</p>
+<h3 id="池化层："><a href="#池化层：" class="headerlink" title="池化层："></a>池化层：</h3><p><code>最大池化</code>思想很简单，以下图为例，把4x4的图像分割成4个不同的区域，然后输出每个区域的最大值，这就是最大池化所做的事情。其实这里我们选择了2x2的过滤器，步长为2。在一幅真正的图像中提取最大值可能意味着提取了某些特定特征，比如垂直边缘、一只眼睛等等。</p>
+<img src="https://img-blog.csdn.net/20181021181434387?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2NTAxMDI3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" width="60%">
 
-word_index = {k:(v+3) for k,v in word_index.items()}
-word_index[&quot;&lt;PAD&gt;&quot;] = 0
-word_index[&quot;&lt;START&gt;&quot;] = 1
-word_index[&quot;&lt;UNK&gt;&quot;] = 2
-word_index[&quot;&lt;UNUSED&gt;&quot;] = 3
+<p><code>平均池化</code>和最大池化唯一的不同是，它计算的是区域内的平均值而最大池化计算的是最大值。在日常应用使用最多的还是最大池化。</p>
+<p>总结：池化层不会改变矩阵的深度，但是它可以缩小矩阵的大小，也可以进一步减少全连接层的节点数，从而减少整个神经网络的参数个数。</p>
+<h2 id="0x01-RNN-循环神经网络"><a href="#0x01-RNN-循环神经网络" class="headerlink" title="0x01 RNN:循环神经网络"></a>0x01 RNN:循环神经网络</h2><p>[博客园参考链接]<a href="https://www.cnblogs.com/imzgmc/p/10632636.html" target="_blank" rel="noopener">https://www.cnblogs.com/imzgmc/p/10632636.html</a>)</p>
+<p>一般用于连续的数据(sequential data)。</p>
+<img src="https://s2.ax1x.com/2020/03/02/3fkCdO.png" width="60%">
 
-reverse_word_index = dict([(value, key) for (key, value) in word_index.items()])
+<p>循环神经网络是一类用于处理序列数据的神经网络。它与其他神经网络的不同是，RNN可以更好的去处理序列的信息，即认准了前后的输入之间存在关系。在NLP (Natural Language Processing)中，去理解一整句话，孤立的理解组成这句话的词显然是不够的，我们需要整体的处理由这些词连接起来的整个序列。</p>
+<p>如：(1) 我饿了，我要去食堂<strong><em>。(2)  我饭卡丢了，我要去食堂</em></strong>。很显然，第一句话是想表明去食堂就餐，而第二句则很有可能因为刚吃过饭，发现饭卡不见了，去食堂寻找饭卡。而在此之前，我们常用的语言模型是N-Gram，无论何种语境，可能去食堂大概率匹配的是“吃饭”而不在乎之前的信息。RNN就解决了N-Gram的缺陷，它在理论上可以往前(后)看任意多个词。</p>
+<p>循环神经网络的大致结构：</p>
+<img src="https://s2.ax1x.com/2020/03/02/3fkL0f.png" width="60%">
 
-train_data = keras.preprocessing.sequence.pad_sequences(train_data, value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
-test_data = keras.preprocessing.sequence.pad_sequences(test_data, value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
-
-def decode_review(text):
-    return &quot; &quot;.join([reverse_word_index.get(i, &quot;?&quot;) for i in text])</code></pre><h2 id="0x01-训练过程"><a href="#0x01-训练过程" class="headerlink" title="0x01 训练过程"></a>0x01 训练过程</h2><p><code>Embedding</code>层的作用：创建<strong>单词向量</strong>，并根据单词相关程度区分它们。   </p>
-<p><code>GlobalAverage1D</code>层的作用：将任何尺寸的数据放入其中并将其放在一个较低的维度。</p>
-<p><code>DENSE</code>层的作用：尝试对单词进行分类并掌握单词模式(pattern)，最终提升网络准确性(accuracy)</p>
-<p>其中<code>binary_cross_entropy</code>是二分类的交叉熵，实际是多分类<code>softmax_cross_entropy</code>的一种特殊情况，当多分类中，类别只有两类时，即0或者1，即为二分类，二分类也是一个逻辑回归问题，也可以套用逻辑回归的损失函数。</p>
-<p>model.fit中的batch_size：一轮训练的数据量。<br>    # model down here</p>
-<pre><code>model = keras.Sequential()
-model.add(keras.layers.Embedding(88000, 16))
-model.add(keras.layers.GlobalAveragePooling1D())
-model.add(keras.layers.Dense(16, activation=&apos;relu&apos;))
-model.add(keras.layers.Dense(1, activation=&apos;sigmoid&apos;))
-
-model.summary()
-model.compile(optimizer=&quot;adam&quot;, loss=&quot;binary_crossentropy&quot;, metrics=[&quot;accuracy&quot;])</code></pre><p>整个模型结构如下：</p>
-<img src="https://s2.ax1x.com/2020/02/29/3yBnc6.png" width="60%">
-
-
-<p>验证集选取前10000，训练集选取10000以后的。</p>
-<pre><code>x_val = train_data[:10000]
-x_train = train_data[10000:]
-
-y_val = train_labels[:10000]
-y_train = train_labels[10000:]
-
-fitModel = model.fit(x_train, y_train,epochs=40, batch_size=512,
-                    validation_data=(x_val, y_val), verbose=1)
-
-results = model.evaluate(test_data, test_labels)</code></pre><p>最后训练得出损失值是<code>0.3283079787778854</code>，正确率是<code>0.87256</code>。</p>
-<h2 id="0x02-保存模型"><a href="#0x02-保存模型" class="headerlink" title="0x02 保存模型"></a>0x02 保存模型</h2><p>用如下的代码便可以很轻松的保存模型，保存在当前目录下。</p>
-<pre><code>model.save(&quot;model.h5&quot;) 
-model = keras.models.load_model(&quot;model.h5&quot;)</code></pre><h2 id="0x03-模型测试"><a href="#0x03-模型测试" class="headerlink" title="0x03 模型测试"></a>0x03 模型测试</h2><p>打开测试集文件，同样注意要进行文本预处理，<strong>细节</strong>很重要。</p>
-<pre><code>def review_encode(s):
-    encoded = [1]
-
-    for word in s:
-        if word.lower() in word_index:
-            encoded.append(word_index[word.lower()])
-        else:
-            encoded.append(2)
-
-    return encoded
-
-
-with open(&quot;test.txt&quot;, encoding=&quot;utf-8&quot;) as f:
-    for line in f.readlines():
-        nline = line.replace(&quot;,&quot;,&quot;&quot;).replace(&quot;.&quot;, &quot;&quot;).replace(&quot;(&quot;,&quot;&quot;).replace(&quot;)&quot;,&quot;&quot;).replace(&quot;:&quot;,&quot;&quot;).replace(&quot;\&quot;&quot;,&quot;&quot;).strip().split(&quot; &quot;)
-
-        encode = review_encode(nline)
-
-        encode = keras.preprocessing.sequence.pad_sequences([encode], value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
-        predict = model.predict(encode)
-        print(line)
-        print(encode)
-        print(predict[0])    </code></pre><p>最终得到的预测结果是<code>0.93312705</code>，表明是positive的评论。 </p>
-
+<h2 id="0x02-今后学习的方向"><a href="#0x02-今后学习的方向" class="headerlink" title="0x02 今后学习的方向"></a>0x02 今后学习的方向</h2><p>CNN, RNN网络的实例<br>数据可视化<br>计算机视觉</p>
+<img src="https://s2.ax1x.com/2020/03/02/3fAKj1.png" width="60%">
       
       <!-- reward -->
       
@@ -239,7 +186,7 @@ with open(&quot;test.txt&quot;, encoding=&quot;utf-8&quot;) as f:
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/03/02/CNN%E4%B8%8ERNN%E7%9A%84%E6%AF%94%E8%BE%83/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -255,19 +202,10 @@ with open(&quot;test.txt&quot;, encoding=&quot;utf-8&quot;) as f:
   
   <nav class="article-nav">
     
-      <a href="/2020/03/02/CNN%E4%B8%8ERNN%E7%9A%84%E6%AF%94%E8%BE%83/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            CNN与RNN的比较
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" class="article-nav-link">
+      <a href="/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">数据结构单链表相关题目</div>
+        <div class="article-nav-title">Tensorflow2.0 IMDB评论文本分类</div>
       </a>
     
   </nav>
