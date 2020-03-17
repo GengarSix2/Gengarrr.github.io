@@ -67,6 +67,85 @@
     
     
     
+    <article id="post-tensorflow2-0-优化函数、学习速率、反向传播算法" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/02/17/tensorflow2-0-%E4%BC%98%E5%8C%96%E5%87%BD%E6%95%B0%E3%80%81%E5%AD%A6%E4%B9%A0%E9%80%9F%E7%8E%87%E3%80%81%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95/"
+    >tensorflow2.0-优化函数、学习速率、反向传播算法</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/17/tensorflow2-0-%E4%BC%98%E5%8C%96%E5%87%BD%E6%95%B0%E3%80%81%E5%AD%A6%E4%B9%A0%E9%80%9F%E7%8E%87%E3%80%81%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95/" class="article-date">
+  <time datetime="2020-02-17T12:06:41.000Z" itemprop="datePublished">2020-02-17</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av62215565?p=9" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-多层感知器"><a href="#0x00-多层感知器" class="headerlink" title="0x00 多层感知器"></a>0x00 多层感知器</h2><p>我们首先回顾一下多层感知器的结构。<br>多层感知器: 输入层-&gt;隐含层(可以是多层)-&gt;输出层</p>
+<img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1525985364,3633287073&fm=15&gp=0.jpg" width="60%">
+
+<p>其中输出层的特点： </p>
+<ol>
+<li>预测连续值：不激活直接输出。   </li>
+<li>预测二分类问题：<code>sigmoid</code>运算，二分类输出。    </li>
+<li>预测多分类问题：<code>softmax</code>运算，输出多分类上的概率分布。</li>
+</ol>
+<h2 id="0x01-梯度下降算法"><a href="#0x01-梯度下降算法" class="headerlink" title="0x01 梯度下降算法"></a>0x01 梯度下降算法</h2><p>定义：<br>梯度就是表明损失函数相对参数的变化率，对梯度进行缩放的参数被称为学习速率(learning rate)</p>
+<p>学习速率：它是一种超参数，即手工可配置的设置，需要为它设定正确的值。合适的学习速率，损失函数随时间下降，直到一个底部不适合的学习速率，损失函数可能会发生震荡。  </p>
+<p>学习速率选取原则：在调整学习速率时，既需要使其足够小，保证不至于发生超调，也要保证它足够大，以使损失函数能够尽快下降，从而可通过较少次数的迭代更快地完成学习。</p>
+<p>反向传播算法：反向传播算法是一种高效计算数据流图中梯度的技术。<strong>每一层的导数都是后一层的导数与前一层输出之积</strong>，这正是链式法则的奇妙之处，误差反向传播算法利用的正是这一特点。前馈时，从输入开始，逐一计算每个隐含层的输出，直到输出层然后开始计算导数，并从输出层经各隐含层逐一反向传播。为了减少计算量，还需对所有已完成计算的元素进行复用。这便是反向传播算法名称的由来。    </p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Tensorflow2-0-softmax多分类问题实现" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
