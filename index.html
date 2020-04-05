@@ -161,6 +161,91 @@
 
 </article>
     
+    <article id="post-Crackme-3" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/03/23/Crackme-3/"
+    >Crackme 3</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/03/23/Crackme-3/" class="article-date">
+  <time datetime="2020-03-23T05:22:40.000Z" itemprop="datePublished">2020-03-23</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>0x01 查壳<br>首先用PEiD进行查壳，无壳，但是找到了CRC32的加密方式，后面有可能会用到。<br><img src="https://img-blog.csdnimg.cn/20200323000652844.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200323000711225.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>0x02 初步分析<br>先随意输入Name和Code，发现当输入的Name少于五个字节时则不弹窗；大于等于五个字节才会弹出错误提示框。<br><img src="https://img-blog.csdnimg.cn/2020032300080751.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>用OD打开程序，使用插件搜索字符串，可以找到提示注册成功的字样，双击跟入。<br><img src="https://img-blog.csdnimg.cn/20200323000828748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>在这里可以看到关键跳转步骤，经过CM3.00404224函数后，esi与eax的值必须相等，才会显示注册码成功。继续往上查看之前，先将关键的CM3.00404224函数断下。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200323001053503.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>在上方找到了GetWindowTextA函数，会将Name的长度与5进行比较，大于等于5才能进行下一步。<br><img src="https://img-blog.csdnimg.cn/20200323001109951.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>按f9进行运行，Name和Code按照如下填写，点击Checkme。<br><img src="https://img-blog.csdnimg.cn/202003230013179.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>会发现程序被断在GetWindowTextA函数下方。按f8步步跟，发现经过CM3.00402ED0函数后，Name通过[local.1]局部变量被赋值给eax，变为DiKeNabcde。在堆栈中可以查看到。<br><img src="https://img-blog.csdnimg.cn/20200323001339916.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>继续运行，edx=0xA，猜想这里edx应该是DiKeNabcde的长度，即修改过后的Name（后面用name代替）的长度，同时eax被赋值为存储name的内存地址。<br><img src="https://img-blog.csdnimg.cn/2020032300143071.png#pic_center" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200323001440608.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>0x03 关键函数</p>
+<p>接着按f9运行后，发现程序被断在CM3.00404224函数处，并且输入的Code变为012345（后面用code代替），而进入函数前esi为0x5F9501CE，可以想到该函数会对code进行运算处理，从而进行最终判断。按f7进入函数查看。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200323001616210.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>进入函数后，在函数下方发现了关键的循环函数，eax作为计数器，从1开始累加，循环code的长度次数后结束循环。<br><img src="https://img-blog.csdnimg.cn/20200323001649710.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>可以发现在结束循环后，存放最终结果的ebx变为0x00003039，而变为十进制后正是12345，eax中存放着局部变量012345的堆栈地址。同时esi的值依然为0x5F9501CE，并没有发生变化。<br><img src="https://img-blog.csdnimg.cn/20200323001712414.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>继续运行会回到最终判断条件的位置，此时esi为0x5F9501CE，而eax为0x00003039。这里可以猜想，是否是输入Code的值与0x5F9501CE即可成功。<br><img src="https://img-blog.csdnimg.cn/20200323001758314.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>进行两组实验后发现果然如此。<br><img src="https://img-blog.csdnimg.cn/20200323001845960.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>0x04 对于注册机的探究</p>
+<p>至此为止大致流程已经清楚，即只要我们获取esi根据name生成的值，并转换为十进制即可得到正确的Code。接下来对esi的生成进行探究。<br>从头运行，发现esi的值是由CM3.00403DF0函数得出的，跟入该函数查看。</p>
+<p><img src="https://img-blog.csdnimg.cn/2020032300225910.png#pic_center" alt="在这里插入图片描述"></p>
+<p>一进去即可看到关键的循环函数，这里的地址也符合开头CRC32算法所在的位置。edx是计数器，循环name长度的次数。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200323002348298.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>其中edi在循环过程中一直为0所以直接省略，最终结果存放在eax中，并且会在后面赋值给esi。<br>这里有一个困惑的点就是对于dword ptr ds:[]数组的构建，<br>dword ptr ds:[edi+eax<em>4]本意指将 [edi+eax</em>4] 的双字节段地址里的内容赋值给ebx，一开始没有想到好的办法去构造。后来在网上查询找到了直接将内存中的数据转化为数组的插件，非常好用，效果如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200324101617505.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200324101631768.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>注册机如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> memory[<span class="number">300</span>] = &#123;<span class="number">0x00000000</span>, <span class="number">0x77073096</span>, <span class="number">0xEE0E612C</span>, <span class="number">0x990951BA</span>, <span class="number">0x076DC419</span>, <span class="number">0x706AF48F</span>, <span class="number">0xE963A535</span>, <span class="number">0x9E6495A3</span>, <span class="number">0x0EDB8832</span>, <span class="number">0x79DCB8A4</span>, </span><br><span class="line">  <span class="number">0xE0D5E91E</span>, <span class="number">0x97D2D988</span>, <span class="number">0x09B64C2B</span>, <span class="number">0x7EB17CBD</span>, <span class="number">0xE7B82D07</span>, <span class="number">0x90BF1D91</span>, <span class="number">0x1DB71064</span>, <span class="number">0x6AB020F2</span>, <span class="number">0xF3B97148</span>, <span class="number">0x84BE41DE</span>, </span><br><span class="line">  <span class="number">0x1ADAD47D</span>, <span class="number">0x6DDDE4EB</span>, <span class="number">0xF4D4B551</span>, <span class="number">0x83D385C7</span>, <span class="number">0x136C9856</span>, <span class="number">0x646BA8C0</span>, <span class="number">0xFD62F97A</span>, <span class="number">0x8A65C9EC</span>, <span class="number">0x14015C4F</span>, <span class="number">0x63066CD9</span>, </span><br><span class="line">  <span class="number">0xFA0F3D63</span>, <span class="number">0x8D080DF5</span>, <span class="number">0x3B6E20C8</span>, <span class="number">0x4C69105E</span>, <span class="number">0xD56041E4</span>, <span class="number">0xA2677172</span>, <span class="number">0x3C03E4D1</span>, <span class="number">0x4B04D447</span>, <span class="number">0xD20D85FD</span>, <span class="number">0xA50AB56B</span>, </span><br><span class="line">  <span class="number">0x35B5A8FA</span>, <span class="number">0x42B2986C</span>, <span class="number">0xDBBBC9D6</span>, <span class="number">0xACBCF940</span>, <span class="number">0x32D86CE3</span>, <span class="number">0x45DF5C75</span>, <span class="number">0xDCD60DCF</span>, <span class="number">0xABD13D59</span>, <span class="number">0x26D930AC</span>, <span class="number">0x51DE003A</span>, </span><br><span class="line">  <span class="number">0xC8D75180</span>, <span class="number">0xBFD06116</span>, <span class="number">0x21B4F4B5</span>, <span class="number">0x56B3C423</span>, <span class="number">0xCFBA9599</span>, <span class="number">0xB8BDA50F</span>, <span class="number">0x2802B89E</span>, <span class="number">0x5F058808</span>, <span class="number">0xC60CD9B2</span>, <span class="number">0xB10BE924</span>, </span><br><span class="line">  <span class="number">0x2F6F7C87</span>, <span class="number">0x58684C11</span>, <span class="number">0xC1611DAB</span>, <span class="number">0xB6662D3D</span>, <span class="number">0x76DC4190</span>, <span class="number">0x01DB7106</span>, <span class="number">0x98D220BC</span>, <span class="number">0xEFD5102A</span>, <span class="number">0x71B18589</span>, <span class="number">0x06B6B51F</span>, </span><br><span class="line">  <span class="number">0x9FBFE4A5</span>, <span class="number">0xE8B8D433</span>, <span class="number">0x7807C9A2</span>, <span class="number">0x0F00F934</span>, <span class="number">0x9609A88E</span>, <span class="number">0xE10E9818</span>, <span class="number">0x7F6A0DBB</span>, <span class="number">0x086D3D2D</span>, <span class="number">0x91646C97</span>, <span class="number">0xE6635C01</span>, </span><br><span class="line">  <span class="number">0x6B6B51F4</span>, <span class="number">0x1C6C6162</span>, <span class="number">0x856530D8</span>, <span class="number">0xF262004E</span>, <span class="number">0x6C0695ED</span>, <span class="number">0x1B01A57B</span>, <span class="number">0x8208F4C1</span>, <span class="number">0xF50FC457</span>, <span class="number">0x65B0D9C6</span>, <span class="number">0x12B7E950</span>, </span><br><span class="line">  <span class="number">0x8BBEB8EA</span>, <span class="number">0xFCB9887C</span>, <span class="number">0x62DD1DDF</span>, <span class="number">0x15DA2D49</span>, <span class="number">0x8CD37CF3</span>, <span class="number">0xFBD44C65</span>, <span class="number">0x4DB26158</span>, <span class="number">0x3AB551CE</span>, <span class="number">0xA3BC0074</span>, <span class="number">0xD4BB30E2</span>, </span><br><span class="line">  <span class="number">0x4ADFA541</span>, <span class="number">0x3DD895D7</span>, <span class="number">0xA4D1C46D</span>, <span class="number">0xD3D6F4FB</span>, <span class="number">0x4369E96A</span>, <span class="number">0x346ED9FC</span>, <span class="number">0xAD678846</span>, <span class="number">0xDA60B8D0</span>, <span class="number">0x44042D73</span>, <span class="number">0x33031DE5</span>, </span><br><span class="line">  <span class="number">0xAA0A4C5F</span>, <span class="number">0xDD0D7CC9</span>, <span class="number">0x5005713C</span>, <span class="number">0x270241AA</span>, <span class="number">0xBE0B1010</span>, <span class="number">0xC90C2086</span>, <span class="number">0x5768B525</span>, <span class="number">0x206F85B3</span>, <span class="number">0xB966D409</span>, <span class="number">0xCE61E49F</span>, </span><br><span class="line">  <span class="number">0x5EDEF90E</span>, <span class="number">0x29D9C998</span>, <span class="number">0xB0D09822</span>, <span class="number">0xC7D7A8B4</span>, <span class="number">0x59B33D17</span>, <span class="number">0x2EB40D81</span>, <span class="number">0xB7BD5C3B</span>, <span class="number">0xC0BA6CAD</span>, <span class="number">0xEDB88320</span>, <span class="number">0x9ABFB3B6</span>, </span><br><span class="line">  <span class="number">0x03B6E20C</span>, <span class="number">0x74B1D29A</span>, <span class="number">0xEAD54739</span>, <span class="number">0x9DD277AF</span>, <span class="number">0x04DB2615</span>, <span class="number">0x73DC1683</span>, <span class="number">0xE3630B12</span>, <span class="number">0x94643B84</span>, <span class="number">0x0D6D6A3E</span>, <span class="number">0x7A6A5AA8</span>, </span><br><span class="line">  <span class="number">0xE40ECF0B</span>, <span class="number">0x9309FF9D</span>, <span class="number">0x0A00AE27</span>, <span class="number">0x7D079EB1</span>, <span class="number">0xF00F9344</span>, <span class="number">0x8708A3D2</span>, <span class="number">0x1E01F268</span>, <span class="number">0x6906C2FE</span>, <span class="number">0xF762575D</span>, <span class="number">0x806567CB</span>, </span><br><span class="line">  <span class="number">0x196C3671</span>, <span class="number">0x6E6B06E7</span>, <span class="number">0xFED41B76</span>, <span class="number">0x89D32BE0</span>, <span class="number">0x10DA7A5A</span>, <span class="number">0x67DD4ACC</span>, <span class="number">0xF9B9DF6F</span>, <span class="number">0x8EBEEFF9</span>, <span class="number">0x17B7BE43</span>, <span class="number">0x60B08ED5</span>, </span><br><span class="line">  <span class="number">0xD6D6A3E8</span>, <span class="number">0xA1D1937E</span>, <span class="number">0x38D8C2C4</span>, <span class="number">0x4FDFF252</span>, <span class="number">0xD1BB67F1</span>, <span class="number">0xA6BC5767</span>, <span class="number">0x3FB506DD</span>, <span class="number">0x48B2364B</span>, <span class="number">0xD80D2BDA</span>, <span class="number">0xAF0A1B4C</span>, </span><br><span class="line">  <span class="number">0x36034AF6</span>, <span class="number">0x41047A60</span>, <span class="number">0xDF60EFC3</span>, <span class="number">0xA867DF55</span>, <span class="number">0x316E8EEF</span>, <span class="number">0x4669BE79</span>, <span class="number">0xCB61B38C</span>, <span class="number">0xBC66831A</span>, <span class="number">0x256FD2A0</span>, <span class="number">0x5268E236</span>, </span><br><span class="line">  <span class="number">0xCC0C7795</span>, <span class="number">0xBB0B4703</span>, <span class="number">0x220216B9</span>, <span class="number">0x5505262F</span>, <span class="number">0xC5BA3BBE</span>, <span class="number">0xB2BD0B28</span>, <span class="number">0x2BB45A92</span>, <span class="number">0x5CB36A04</span>, <span class="number">0xC2D7FFA7</span>, <span class="number">0xB5D0CF31</span>, </span><br><span class="line">  <span class="number">0x2CD99E8B</span>, <span class="number">0x5BDEAE1D</span>, <span class="number">0x9B64C2B0</span>, <span class="number">0xEC63F226</span>, <span class="number">0x756AA39C</span>, <span class="number">0x026D930A</span>, <span class="number">0x9C0906A9</span>, <span class="number">0xEB0E363F</span>, <span class="number">0x72076785</span>, <span class="number">0x05005713</span>, </span><br><span class="line">  <span class="number">0x95BF4A82</span>, <span class="number">0xE2B87A14</span>, <span class="number">0x7BB12BAE</span>, <span class="number">0x0CB61B38</span>, <span class="number">0x92D28E9B</span>, <span class="number">0xE5D5BE0D</span>, <span class="number">0x7CDCEFB7</span>, <span class="number">0x0BDBDF21</span>, <span class="number">0x86D3D2D4</span>, <span class="number">0xF1D4E242</span>, </span><br><span class="line">  <span class="number">0x68DDB3F8</span>, <span class="number">0x1FDA836E</span>, <span class="number">0x81BE16CD</span>, <span class="number">0xF6B9265B</span>, <span class="number">0x6FB077E1</span>, <span class="number">0x18B74777</span>, <span class="number">0x88085AE6</span>, <span class="number">0xFF0F6A70</span>, <span class="number">0x66063BCA</span>, <span class="number">0x11010B5C</span>, </span><br><span class="line">  <span class="number">0x8F659EFF</span>, <span class="number">0xF862AE69</span>, <span class="number">0x616BFFD3</span>, <span class="number">0x166CCF45</span>, <span class="number">0xA00AE278</span>, <span class="number">0xD70DD2EE</span>, <span class="number">0x4E048354</span>, <span class="number">0x3903B3C2</span>, <span class="number">0xA7672661</span>, <span class="number">0xD06016F7</span>, </span><br><span class="line">  <span class="number">0x4969474D</span>, <span class="number">0x3E6E77DB</span>, <span class="number">0xAED16A4A</span>, <span class="number">0xD9D65ADC</span>, <span class="number">0x40DF0B66</span>, <span class="number">0x37D83BF0</span>, <span class="number">0xA9BCAE53</span>, <span class="number">0xDEBB9EC5</span>, <span class="number">0x47B2CF7F</span>, <span class="number">0x30B5FFE9</span>, </span><br><span class="line">  <span class="number">0xBDBDF21C</span>, <span class="number">0xCABAC28A</span>, <span class="number">0x53B39330</span>, <span class="number">0x24B4A3A6</span>, <span class="number">0xBAD03605</span>, <span class="number">0xCDD70693</span>, <span class="number">0x54DE5729</span>, <span class="number">0x23D967BF</span>, <span class="number">0xB3667A2E</span>, <span class="number">0xC4614AB8</span>, </span><br><span class="line">  <span class="number">0x5D681B02</span>, <span class="number">0x2A6F2B94</span>, <span class="number">0xB40BBE37</span>, <span class="number">0xC30C8EA1</span>, <span class="number">0x5A05DF1B</span>&#125;;</span><br><span class="line">  <span class="keyword">int</span> edx = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> ebx = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> eax = <span class="number">0xFFFFFFFF</span>;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> al = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> shed = <span class="number">0</span>;</span><br><span class="line">  <span class="built_in">string</span> str1 = <span class="string">"DiKeN"</span>;</span><br><span class="line">  <span class="built_in">string</span> name;  </span><br><span class="line">  </span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"Name:"</span>;</span><br><span class="line">  getline(<span class="built_in">cin</span>, name);</span><br><span class="line">  name = str1 + name;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (edx=name.length(); edx&gt;<span class="number">0</span>; edx--)</span><br><span class="line">  &#123;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 仅保留eax的低八位</span></span><br><span class="line">    al = eax &amp; <span class="number">0xFF</span>;</span><br><span class="line">    al = al ^ name[name.length()-edx];</span><br><span class="line">    <span class="comment">// 更新eax的低八位</span></span><br><span class="line">    eax = (eax &amp; <span class="number">0xffffff00</span>) | al;</span><br><span class="line">    </span><br><span class="line">    shed = eax;</span><br><span class="line">    al = eax &amp; <span class="number">0xFF</span>;</span><br><span class="line">    ebx = memory[al];</span><br><span class="line"></span><br><span class="line">    eax = shed;</span><br><span class="line">    eax = eax &gt;&gt; <span class="number">8</span>;</span><br><span class="line">    eax = eax^ebx;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  eax = eax^<span class="number">0xFFFFFFFF</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;<span class="string">"Code:"</span>&lt;&lt;eax&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">  system(<span class="string">"pause:"</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输入Name即可得到对应的Code：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200324101718240.png#pic_center" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/2020032410180810.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Reverse/" rel="tag">Reverse</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Tensorflow2-0-利用卷积神经网络实现简单的验证码识别" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -989,134 +1074,6 @@ pc-&gt;link=pa?pa:pb;
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Reverse/" rel="tag">Reverse</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-tensorflow2-0-Dropout抑制过拟合与超参数选择" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/02/17/tensorflow2-0-Dropout%E6%8A%91%E5%88%B6%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E8%B6%85%E5%8F%82%E6%95%B0%E9%80%89%E6%8B%A9/"
-    >tensorflow2.0 Dropout抑制过拟合与超参数选择</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/02/17/tensorflow2-0-Dropout%E6%8A%91%E5%88%B6%E8%BF%87%E6%8B%9F%E5%90%88%E4%B8%8E%E8%B6%85%E5%8F%82%E6%95%B0%E9%80%89%E6%8B%A9/" class="article-date">
-  <time datetime="2020-02-17T12:44:36.000Z" itemprop="datePublished">2020-02-17</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av62215565?p=9" target="_blank" rel="noopener">B站教程</a></h3><p>我们仍是通过之前的Fashion-Mnist数据集理解<code>Dropout</code>是如何抑制过拟合的。</p>
-<p>导入模块。</p>
-<pre><code>import tensorflow as tf 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-%matplotlib inline
-
-fashion_mnist = tf.keras.datasets.fashion_mnist.load_data()
-(train_image, train_label), (test_image, test_label) = fashion_mnist
-
-# 归一化 灰度区间是0-255
-train_image = train_image/255
-test_image = test_image/255
-
-train_label_onehot = tf.keras.utils.to_categorical(train_label)
-test_label_onehot = tf.keras.utils.to_categorical(test_label)</code></pre><p>注意这里相比较之前的代码，增加了Dropout层。</p>
-<pre><code># train_label已经变为独热编码，所以编译时损失函数应当使用categorical_crossentropy
-
-model = tf.keras.Sequential()
-model.add(tf.keras.layers.Flatten(input_shape=(28,28)))
-model.add(tf.keras.layers.Dense(128, activation=&apos;relu&apos;))
-# 添加Dropout层，随机丢弃50%。
-model.add(tf.keras.layers.Dropout(0.5))
-model.add(tf.keras.layers.Dense(128, activation=&apos;relu&apos;))
-# 添加Dropout层，随机丢弃50%。
-model.add(tf.keras.layers.Dropout(0.5))
-model.add(tf.keras.layers.Dense(128, activation=&apos;relu&apos;))
-# 添加Dropout层，随机丢弃50%。
-model.add(tf.keras.layers.Dropout(0.5))
-model.add(tf.keras.layers.Dense(10, activation=&apos;softmax&apos;))
-
-model.compile(optimizer=&apos;adam&apos;,
-            loss = &apos;categorical_crossentropy&apos;,
-            metrics=[&apos;acc&apos;]) 
-
-# 加入validation参数，表示加入验证集
-history = model.fit(train_image, train_label_onehot, epochs=10,
-                   validation_data=(test_image, test_label_onehot)) </code></pre><p>先前的训练结果：</p>
-<img src="https://s2.ax1x.com/2020/02/17/3iVEuR.png" width="60%">
-
-<img src="https://s2.ax1x.com/2020/02/17/3iVtVP.png" width="60%">
-
-<p>加入Dropout层抑制过拟合后的训练结果：</p>
-<img src="https://s2.ax1x.com/2020/02/17/3iVdPS.png" width="60%">
-
-<img src="https://s2.ax1x.com/2020/02/17/3iVBvj.png" width="60%">    
-
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>过拟合：在训练数据上得分很高，在测试数据上得分相对比较低。<br>欠拟合：在训练数据上得分比较低，在测试数据上得分也比较低。<br>应对过拟合的方法：使用Dropout来抑制。<br>应对欠拟合的方法：增加神经网络深度。</p>
-<h3 id="Drop的原理：人为丢弃一些单元"><a href="#Drop的原理：人为丢弃一些单元" class="headerlink" title="Drop的原理：人为丢弃一些单元"></a>Drop的原理：人为丢弃一些单元</h3><img src="https://s2.ax1x.com/2020/02/17/3iZTSg.png" width="60%">
-
-<h3 id="为什么Dropout可以解决过拟合？"><a href="#为什么Dropout可以解决过拟合？" class="headerlink" title="为什么Dropout可以解决过拟合？"></a>为什么Dropout可以解决过拟合？</h3><p>1.取平均的作用：先回到标准的模型.我们用相同的训练数据去训陈5个不同的神经网络，一般会得到5个不同的结果，<strong>此时我们可以采用“5个结果取均值”或者“多数取胜的投票策略”去决定最终结果</strong>。</p>
-<p>2.减少神经元之间复杂的共适应关系：因为 dropout程序导致两个神经元不一定每次都在一个 dropout网络中出现。这样<strong>权值的更新不再依赖于有固定关系的隐含节点的共同作用，阻止了某些特征仅仅在其它特定特征下才有效果的情况</strong>。</p>
-<p>3.Dropout类似于<strong>性别</strong>在生物进化中的角色：物种为了生存往往会倾向于适应这种环境，环境突变则会导致物种难以做岀及时反应，性别的岀现可以繁衍岀适应新环境的变种，有效的阻止过拟合，即避免环境改变时物种可能面临的灭绝。</p>
-<h3 id="参数选择原则："><a href="#参数选择原则：" class="headerlink" title="参数选择原则："></a>参数选择原则：</h3><p>理想的模型是刚好在欠拟合和过拟合的界线上，也就是正好拟合数据。</p>
-<p>首先开发一个过拟合的模型。方法：添加更多的层、增加每一层、训练更多轮次。<br>然后，抑制过拟合：Dropout、正则化、图像增加。最好的办法：增加训练数据。<br>再次，调节超参数：学习速率、隐藏单元数、训练轮次。</p>
-<p>超参数的选择是一个经验与不断测试的结果。经典机器学习的方法，如特征工程、增加训练数据也要做交叉验证。</p>
-<h3 id="构建网络的总原则："><a href="#构建网络的总原则：" class="headerlink" title="构建网络的总原则："></a>构建网络的总原则：</h3><p>一、增大网络容量，直到过拟合<br>二、采取措施抑制过拟合<br>三、继续增大网络容量，直到过拟合</p>
-<p>此外可以利用<strong>正则化</strong>控制网络规模。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tensorflow-2-0/" rel="tag">Tensorflow 2.0</a></li></ul>
 
 
     </footer>
