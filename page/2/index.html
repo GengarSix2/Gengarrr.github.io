@@ -67,6 +67,84 @@
     
     
     
+    <article id="post-Crackme-1" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/02/20/Crackme-1/"
+    >Crackme_1</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/20/Crackme-1/" class="article-date">
+  <time datetime="2020-02-20T12:51:36.000Z" itemprop="datePublished">2020-02-20</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="第一个CrackMe"><a href="#第一个CrackMe" class="headerlink" title="第一个CrackMe"></a>第一个CrackMe</h1><h3 id="0x00-摘要"><a href="#0x00-摘要" class="headerlink" title="0x00 摘要"></a>0x00 摘要</h3><p>   最近正式开始学习逆向破解，下面附上我破解的第一个crackme小程序，以作留念。</p>
+<h3 id="0x01-初步查壳"><a href="#0x01-初步查壳" class="headerlink" title="0x01 初步查壳"></a>0x01 初步查壳</h3><p>   拖入PEID中查壳分析。<br>   <img src="https://img-blog.csdnimg.cn/20190407180109290.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_12,color_FFFFFF,t_70" alt="无壳。VC++6.0。省去脱壳的步骤。"><br>   无壳。VC++6.0。省去脱壳的步骤。</p>
+<h3 id="0x02-反汇编分析"><a href="#0x02-反汇编分析" class="headerlink" title="0x02 反汇编分析"></a>0x02 反汇编分析</h3><p>   拖入OD分析。<br>   <img src="https://img-blog.csdnimg.cn/20190407180724980.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  从最简单的字符串入手，查找“所有参考文本字符串”。<br><img src="https://img-blog.csdnimg.cn/20190407180846589.png" alt="在这里插入图片描述"><br>发现仅有一句字符串，“注册码正确！！！”。赶紧点开跟入。<br><img src="https://img-blog.csdnimg.cn/20190407181053437.png" alt="在这里插入图片描述">那么怎样才能得到这句字符串呢？往上查看。<br><img src="https://img-blog.csdnimg.cn/20190407181314531.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">)<img src="https://img-blog.csdnimg.cn/20190407181321501.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>查看后发现了一系列经典的“cmp，jnz/jz”判断语句。 </p>
+<p><code>004013E2   .  E8 75020000   call &lt;jmp.&amp;MFC42.#3098&gt;</code><br>首先看开头的这段语句。经百度后发现，此语句是调用了<strong>判断长度函数</strong>。接着查看下一句。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">004013E7   .  83F8 08       cmp eax,0x8;  判断注册码长度是否等于8，若不等则跳出，相等则继续。</span><br></pre></td></tr></table></figure>
+<p>注册码长度被储存在eax中，与8进行比较。<br>为了检测我们的猜想是否正确，在<strong>004013F1</strong>处下断点（F2），再按F9运行程序动态调试，随意输入长度为8的注册码（这里我输入的是“12345678”），发现果然断在了断点处。（即长度判断成功，但第二个判断条件未满足）。</p>
+<p><img src="https://img-blog.csdnimg.cn/2019040718243569.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_12,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>那么第二个条件是什么呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">004013EC   .  807C24 09 2D  cmp byte ptr ss:[esp+0x9],0x2D</span><br></pre></td></tr></table></figure>
+<p>查看代码，发现是将esp+0x9与0x2D（十进制45）进行比较，查询ASCII码后，45表示的是”-“。在esp中右键，点击“在数据窗口中跟随”。<br><img src="https://img-blog.csdnimg.cn/20190407182757469.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">)<img src="https://img-blog.csdnimg.cn/20190407183221835.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">发现 esp+0x9 表示的是注册码第六位，注释已写在上方图片中。<br>接下来的分析方法大致类似，这里着重分析几句。<br><img src="https://img-blog.csdnimg.cn/20190407183518577.png" alt="在这里插入图片描述"><br>movsx，表示先符号扩展,再传送。之所以要这样做，是为了将 esp+0x4 中的数据存储到ecx中。<br>shl，左移一位，可看作*2^1。<br>完整的代码分析如下。<br><img src="https://img-blog.csdnimg.cn/20190407184154136.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h3 id="0x03-总结"><a href="#0x03-总结" class="headerlink" title="0x03 总结"></a>0x03 总结</h3><p><img src="https://img-blog.csdnimg.cn/20190407184408602.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_12,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>至此破解完毕。本文采取的是算法分析，其实更“高效”的办法是<strong>将所有jnz改jz或直接以nop代替</strong>，即“爆破法”。但对于我这样的菜鸟而言打好基础才是最重要滴。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Reverse/" rel="tag">Reverse</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-tensorflow2-0-Dropout抑制过拟合与超参数选择" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 

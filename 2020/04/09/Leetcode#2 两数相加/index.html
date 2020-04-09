@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    experiment-CM-1 |  Ayer
+    Leetcode#2 两数相加 |  Ayer
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -33,7 +33,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-experiment-CM-1" class="article article-type-post" itemscope
+  <article id="post-Leetcode#2 两数相加" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -41,7 +41,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  experiment-CM-1
+  Leetcode#2 两数相加
 </h1>
   
 
@@ -50,8 +50,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/04/05/experiment-CM-1/" class="article-date">
-  <time datetime="2020-04-05T03:59:06.000Z" itemprop="datePublished">2020-04-05</time>
+      <a href="/2020/04/09/Leetcode#2%20%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/" class="article-date">
+  <time datetime="2020-04-09T04:51:36.000Z" itemprop="datePublished">2020-04-09</time>
 </a>
       
       
@@ -61,7 +61,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">608字</span>
+            <span class="post-count">280字</span>
         </span>
     </span>
 
@@ -70,7 +70,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">2分钟</span>
+            <span class="post-count">1分钟</span>
         </span>
     </span>
 </div>
@@ -97,32 +97,14 @@
       
 
       
-      <h3 id="0x01-初步查看"><a href="#0x01-初步查看" class="headerlink" title="0x01 初步查看"></a>0x01 初步查看</h3><p>首先使用PeiD查看，无壳。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405114644986.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>打开CM，查看serial输入处，点击Check it并没有出现任何提示框，并且发现任何除数字外的字符都无法输入。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405114713736.png#pic_center" alt="在这里插入图片描述"><br>将CM拖入OD中，利用查找中文字符串插件找到最终判断条件处。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405114740647.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>这里是最终判断条件，eax和esi相等则得到正确答案。现在要做的就是探寻eax和esi分别是如何得到的。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405114808363.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<h3 id="0x02-进一步探寻"><a href="#0x02-进一步探寻" class="headerlink" title="0x02 进一步探寻"></a>0x02 进一步探寻</h3><p>将最终判断条件cmp eax,esi和上方的experime.004013D2断下，按f9运行。<br>进入到004013D2函数中，发现<br>最终返回的esi = 进入函数前esi的值 异或上 0x797A7553。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405114836259.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>而eax即为输入的serial。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405114854567.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>至此我们可以知道，只要知道了esi的生成规则，便可以完成破解。</p>
-<h3 id="0x03-esi的生成规则"><a href="#0x03-esi的生成规则" class="headerlink" title="0x03 esi的生成规则"></a>0x03 esi的生成规则</h3><p>通过向上查看可以看到，esi是由[0x40339C]所赋值的。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405115617750.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>这里我们通过IDA来查看[0x40339C]是在哪里生成的，可以看到是通过调用VolumeNameBuffer函数所得到的。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405115133832.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>继续查看VolumeNameBuffer函数，在这里可以看到是调用0x0040142C地址处的GetVolumeInformationA函数。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405115149659.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>返回OD在0x0040142C处进行查看，可以看到GetVolumeInformationA函数的结果是”Windows”。在网上查询后可以看到，GetVolumeInformationA函数的作用是获取硬盘信息。此时我的exe处于C盘，而当我将他放在D盘后，可以看到此时生成的信息变为”DATA”，分别与本机C盘和D盘的名称相对应。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405115248729.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>继续运行，可以看到下方是一段循环，循环后的结果存放在edi中，正是后面我们查看到的最后一步“进入函数前esi的值”。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405115329624.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>这里需要说明一下esi的”Windows”与ecx的3都是GetVolumeInformationA函数中得到的。其中3的获取如下图所示。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405115343538.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
-<p>接下来对关键函数进行分析，分析结果在右侧。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405115435501.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"><br>使用C++进行复现：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span>* Disk_name;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>* ebx;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> eax = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> edi = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> ecx = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">long</span> i;</span><br><span class="line">    <span class="keyword">int</span> Disk_type = <span class="number">3</span>;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    Disk_name = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">10</span>];</span><br><span class="line">    <span class="built_in">memset</span>(Disk_name, <span class="number">0</span>, <span class="built_in">strlen</span>(Disk_name));</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"experiment-CM-1.exe所在磁盘的名称:"</span>;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;Disk_name;</span><br><span class="line">   </span><br><span class="line">    ebx = (<span class="keyword">unsigned</span> <span class="keyword">long</span> *)&amp;Disk_name[<span class="number">0</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (ecx = Disk_type; ecx&gt;<span class="number">0</span>; ecx--)</span><br><span class="line">    &#123;</span><br><span class="line">        i = ecx;</span><br><span class="line">        i *= *ebx;</span><br><span class="line">        eax = i&amp;<span class="number">0xFFFFFFFF</span>;</span><br><span class="line">        edi += eax;</span><br><span class="line">    &#125;</span><br><span class="line">    edi ^= <span class="number">0x797A7553</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>&lt;&lt;<span class="string">"Serial: "</span>&lt;&lt;edi&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    system(<span class="string">"pause:"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      <h3 id="两数相加"><a href="#两数相加" class="headerlink" title="两数相加"></a>两数相加</h3><img src="https://s1.ax1x.com/2020/04/09/G43d76.png" width="80%">   
 
-<p>下图为最终结果。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200405115536860.png#pic_center" alt="在这里插入图片描述"></p>
-<p><img src="https://img-blog.csdnimg.cn/20200405115546923.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+
+<h3 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h3><p>链表的逆序排列本身就符合加法从低位运算至高位的规则，因此我们只需要顺序遍历链表，同时记录下进位即可。        </p>
+<h3 id="链表的遍历"><a href="#链表的遍历" class="headerlink" title="链表的遍历"></a>链表的遍历</h3><p>这里有一个知识点是关于链表的遍历问题。在struct ListNode中有这样一句： ListNode(int x) : val(x), next(NULL) {}，这表明初始化支持 ListNode（int x）这种方式，即 把x赋给val，NULL赋值给next。</p>
+<p>在遍历的同时，首先定义一个头结点newHead,同时定义一个nownode用来指向当前操作的结点。</p>
+<h3 id="C-代码"><a href="#C-代码" class="headerlink" title="C++代码"></a>C++代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">struct ListNode &#123;</span><br><span class="line">    int val;</span><br><span class="line">    ListNode *next;</span><br><span class="line">    ListNode(int x) : val(x), next(NULL) &#123;&#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) &#123;</span><br><span class="line">        int carry &#x3D; 0; &#x2F;&#x2F;记录进位</span><br><span class="line">        int sum &#x3D; 0; &#x2F;&#x2F;记录当前位和</span><br><span class="line">        ListNode* newhead &#x3D; new ListNode(0);</span><br><span class="line">        ListNode* nownode &#x3D; newhead;</span><br><span class="line"></span><br><span class="line">        while (l1 || l2 || carry)</span><br><span class="line">        &#123;</span><br><span class="line">            sum &#x3D; carry;</span><br><span class="line">            if (l1) sum +&#x3D; l1-&gt;val;</span><br><span class="line">            if (l2) sum +&#x3D; l2-&gt;val;</span><br><span class="line">            carry &#x3D; sum&#x2F;10;</span><br><span class="line">            sum %&#x3D; 10;</span><br><span class="line">            nownode-&gt;val &#x3D; sum;</span><br><span class="line"></span><br><span class="line">            ListNode* nextnode &#x3D; new ListNode(0);</span><br><span class="line">            nownode-&gt;next &#x3D; nextnode;</span><br><span class="line">            l1 &#x3D; l1?l1-&gt;next:nullptr;</span><br><span class="line">            l2 &#x3D; l2?l2-&gt;next:nullptr;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        return newhead;</span><br><span class="line">    &#125;      </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
 
       
       <!-- reward -->
@@ -188,14 +170,14 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/04/05/experiment-CM-1/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/04/09/Leetcode#2%20%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Reverse/" rel="tag">Reverse</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li></ul>
 
 
     </footer>
@@ -206,19 +188,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/04/09/Leetcode#2%20%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            Leetcode#2 两数相加
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/03/23/Crackme-3/" class="article-nav-link">
+      <a href="/2020/04/05/experiment-CM-1/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Crackme 3</div>
+        <div class="article-nav-title">experiment-CM-1</div>
       </a>
     
   </nav>
