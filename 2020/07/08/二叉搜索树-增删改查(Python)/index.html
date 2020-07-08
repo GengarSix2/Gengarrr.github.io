@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Leetcode#2 两数相加 |  Ayer
+    二叉搜索树-增删改查(Python) |  Ayer
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -33,7 +33,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-Leetcode-2-两数相加" class="article article-type-post" itemscope
+  <article id="post-二叉搜索树-增删改查(Python)" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -41,7 +41,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Leetcode#2 两数相加
+  二叉搜索树-增删改查(Python)
 </h1>
   
 
@@ -50,8 +50,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/04/09/Leetcode-2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/" class="article-date">
-  <time datetime="2020-04-09T04:11:50.000Z" itemprop="datePublished">2020-04-09</time>
+      <a href="/2020/07/08/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91-%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5(Python)/" class="article-date">
+  <time datetime="2020-07-08T09:00:04.000Z" itemprop="datePublished">2020-07-08</time>
 </a>
       
       
@@ -61,7 +61,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">280字</span>
+            <span class="post-count">609字</span>
         </span>
     </span>
 
@@ -70,7 +70,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">1分钟</span>
+            <span class="post-count">2分钟</span>
         </span>
     </span>
 </div>
@@ -97,13 +97,24 @@
       
 
       
-      <h3 id="两数相加"><a href="#两数相加" class="headerlink" title="两数相加"></a>两数相加</h3><img src="https://s1.ax1x.com/2020/04/09/G43d76.png" width="80%">   
+      <h3 id="01-定义"><a href="#01-定义" class="headerlink" title="01 定义"></a>01 定义</h3><p>首先定义二叉树结点的数据类型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span><span class="params">()</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, val, left=None, right=None)</span>:</span></span><br><span class="line">		self.val = val</span><br><span class="line">		self.left = left</span><br><span class="line">		self.right = right</span><br></pre></td></tr></table></figure>
+<p>二叉搜索树的定义：<br><code>二叉搜索树（BST）</code>是二叉树的一种特殊表示形式，它满足如下特性：</p>
+<p>每个节点中的值必须<code>大于</code>（或等于）存储在其左侧子树中的任何值。<br>每个节点中的值必须<code>小于</code>（或等于）存储在其右子树中的任何值。</p>
+<p>下面是一个二叉搜索树的例子：</p>
+<img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9hbGl5dW4tbGMtdXBsb2FkLm9zcy1jbi1oYW5nemhvdS5hbGl5dW5jcy5jb20vYWxpeXVuLWxjLXVwbG9hZC91cGxvYWRzLzIwMTgvMDMvMTQvYnN0X2V4YW1wbGUtYTEucG5n?x-oss-process=image/format,png#pic_center" width="50%">
 
-
-<h3 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h3><p>链表的逆序排列本身就符合加法从低位运算至高位的规则，因此我们只需要顺序遍历链表，同时记录下进位即可。        </p>
-<h3 id="链表的遍历"><a href="#链表的遍历" class="headerlink" title="链表的遍历"></a>链表的遍历</h3><p>这里有一个知识点是关于链表的遍历问题。在struct ListNode中有这样一句： ListNode(int x) : val(x), next(NULL) {}，这表明初始化支持 ListNode（int x）这种方式，即 把x赋给val，NULL赋值给next。</p>
-<p>在遍历的同时，首先定义一个头结点newHead,同时定义一个nownode用来指向当前操作的结点。</p>
-<h3 id="C-代码"><a href="#C-代码" class="headerlink" title="C++代码"></a>C++代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">struct ListNode &#123;</span><br><span class="line">    int val;</span><br><span class="line">    ListNode *next;</span><br><span class="line">    ListNode(int x) : val(x), next(NULL) &#123;&#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) &#123;</span><br><span class="line">        int carry &#x3D; 0; &#x2F;&#x2F;记录进位</span><br><span class="line">        int sum &#x3D; 0; &#x2F;&#x2F;记录当前位和</span><br><span class="line">        ListNode* newhead &#x3D; new ListNode(0);</span><br><span class="line">        ListNode* nownode &#x3D; newhead;</span><br><span class="line"></span><br><span class="line">        while (l1 || l2 || carry)</span><br><span class="line">        &#123;</span><br><span class="line">            sum &#x3D; carry;</span><br><span class="line">            if (l1) sum +&#x3D; l1-&gt;val;</span><br><span class="line">            if (l2) sum +&#x3D; l2-&gt;val;</span><br><span class="line">            carry &#x3D; sum&#x2F;10;</span><br><span class="line">            sum %&#x3D; 10;</span><br><span class="line">            nownode-&gt;val &#x3D; sum;</span><br><span class="line"></span><br><span class="line">            ListNode* nextnode &#x3D; new ListNode(0);</span><br><span class="line">            nownode-&gt;next &#x3D; nextnode;</span><br><span class="line">            l1 &#x3D; l1?l1-&gt;next:nullptr;</span><br><span class="line">            l2 &#x3D; l2?l2-&gt;next:nullptr;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        return newhead;</span><br><span class="line">    &#125;      </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="02-增操作"><a href="#02-增操作" class="headerlink" title="02 增操作"></a>02 增操作</h3><p>增加操作本质上与二叉树的遍历操作并无区别。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinaryTree</span><span class="params">()</span>:</span></span><br><span class="line">	<span class="comment"># 插入操作（增）</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">insert</span><span class="params">(self, root, val)</span>:</span></span><br><span class="line">		<span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">			root = TreeNode(val)</span><br><span class="line">		<span class="keyword">elif</span> val &lt; root.val:</span><br><span class="line">			root.left = self.insert(root.left, val)</span><br><span class="line">		<span class="keyword">elif</span> val &gt; root.val:</span><br><span class="line">			root.right = self.insert(root.right, val)</span><br><span class="line">		<span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+<h3 id="03-删操作"><a href="#03-删操作" class="headerlink" title="03 删操作"></a>03 删操作</h3><p>删除操作复杂一些，根据子节点的个数，需要考虑如下三种情况：</p>
+<ol>
+<li>如果目标节点<strong>没有子节点</strong>，我们可以直接移除该目标节点。</li>
+<li>如果目标节<strong>只有一个子节点</strong>，我们可以用其子节点作为替换。</li>
+<li>如果目标节点<strong>有两个子节点</strong>，我们需要用其中序后继节点或者前驱节点来替换，再删除该目标节点。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除操作（删）</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">delete</span><span class="params">(self, root, key)</span>:</span></span><br><span class="line">		<span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> root.val == key:</span><br><span class="line">			<span class="keyword">if</span> root.left==<span class="literal">None</span> <span class="keyword">and</span> root.right==<span class="literal">None</span>:</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">			<span class="keyword">elif</span> root.left!=<span class="literal">None</span> <span class="keyword">and</span> root.right!=<span class="literal">None</span>:</span><br><span class="line">				<span class="comment"># buffer用于存放要替换节点的父节点,tmp是要替换的节点</span></span><br><span class="line">				buffer = <span class="literal">None</span></span><br><span class="line">				temp = root.right</span><br><span class="line">				<span class="keyword">while</span> temp.left:</span><br><span class="line">					buffer = temp</span><br><span class="line">					temp = temp.left</span><br><span class="line">				root.val, temp.val = temp.val, root.val</span><br><span class="line">				<span class="keyword">if</span> buffer == <span class="literal">None</span>:</span><br><span class="line">					root.right = self.delete(temp, key)</span><br><span class="line">				<span class="keyword">else</span>:</span><br><span class="line">					buffer.left = self.delete(buffer, key)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">			<span class="keyword">elif</span> root.left == <span class="literal">None</span>:</span><br><span class="line">				root = root.right</span><br><span class="line">			<span class="keyword">elif</span> root.right == <span class="literal">None</span>:</span><br><span class="line">				root = root.left</span><br><span class="line"></span><br><span class="line">		<span class="keyword">elif</span> root.val &gt; key:</span><br><span class="line">			root.left = self.delete(root.left, key)</span><br><span class="line">		<span class="keyword">elif</span> root.val &lt; key:</span><br><span class="line">			root.right = self.delete(root.right, key)</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+<h3 id="04-改操作"><a href="#04-改操作" class="headerlink" title="04 改操作"></a>04 改操作</h3>这里的修改操作仅仅对结点值进行了修改，修改完以后并没有维护二叉搜索树的性质，后续还可以进一步改进。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改操作（改）</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">modify</span><span class="params">(self, root, val, new_val)</span>:</span></span><br><span class="line">		<span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">		<span class="keyword">elif</span> root.val &gt; val:</span><br><span class="line">			<span class="keyword">return</span> self.modify(root.left, val, new_val)</span><br><span class="line">		<span class="keyword">elif</span> root.val &lt; val:</span><br><span class="line">			<span class="keyword">return</span> self.modify(root.right, val, new_val)</span><br><span class="line">		<span class="keyword">elif</span> root.val == val:</span><br><span class="line">			root.val = new_val</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<h3 id="04-查操作"><a href="#04-查操作" class="headerlink" title="04 查操作"></a>04 查操作</h3></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查找操作（查）</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">search</span><span class="params">(self, root, val)</span>:</span></span><br><span class="line">		<span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">		<span class="keyword">elif</span> root.val &gt; val:</span><br><span class="line">			<span class="keyword">return</span> self.search(root.left, val)</span><br><span class="line">		<span class="keyword">elif</span> root.val &lt; val:</span><br><span class="line">			<span class="keyword">return</span> self.search(root.right, val)</span><br><span class="line">		<span class="keyword">elif</span> root.val == val:</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
 
 
 
@@ -171,7 +182,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/04/09/Leetcode-2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/07/08/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91-%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5(Python)/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -189,19 +200,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/07/08/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91-%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5(Python)/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            二叉搜索树-增删改查(Python)
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/04/05/experiment-CM-1/" class="article-nav-link">
+      <a href="/2020/04/09/Leetcode-2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">experiment-CM-1</div>
+        <div class="article-nav-title">Leetcode#2 两数相加</div>
       </a>
     
   </nav>

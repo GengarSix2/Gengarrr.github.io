@@ -67,6 +67,94 @@
     
     
     
+    <article id="post-二叉搜索树-增删改查(Python)" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/07/08/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91-%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5(Python)/"
+    >二叉搜索树-增删改查(Python)</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/07/08/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91-%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5(Python)/" class="article-date">
+  <time datetime="2020-07-08T09:00:04.000Z" itemprop="datePublished">2020-07-08</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h3 id="01-定义"><a href="#01-定义" class="headerlink" title="01 定义"></a>01 定义</h3><p>首先定义二叉树结点的数据类型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span><span class="params">()</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, val, left=None, right=None)</span>:</span></span><br><span class="line">		self.val = val</span><br><span class="line">		self.left = left</span><br><span class="line">		self.right = right</span><br></pre></td></tr></table></figure>
+<p>二叉搜索树的定义：<br><code>二叉搜索树（BST）</code>是二叉树的一种特殊表示形式，它满足如下特性：</p>
+<p>每个节点中的值必须<code>大于</code>（或等于）存储在其左侧子树中的任何值。<br>每个节点中的值必须<code>小于</code>（或等于）存储在其右子树中的任何值。</p>
+<p>下面是一个二叉搜索树的例子：</p>
+<img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9hbGl5dW4tbGMtdXBsb2FkLm9zcy1jbi1oYW5nemhvdS5hbGl5dW5jcy5jb20vYWxpeXVuLWxjLXVwbG9hZC91cGxvYWRzLzIwMTgvMDMvMTQvYnN0X2V4YW1wbGUtYTEucG5n?x-oss-process=image/format,png#pic_center" width="50%">
+
+<h3 id="02-增操作"><a href="#02-增操作" class="headerlink" title="02 增操作"></a>02 增操作</h3><p>增加操作本质上与二叉树的遍历操作并无区别。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinaryTree</span><span class="params">()</span>:</span></span><br><span class="line">	<span class="comment"># 插入操作（增）</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">insert</span><span class="params">(self, root, val)</span>:</span></span><br><span class="line">		<span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">			root = TreeNode(val)</span><br><span class="line">		<span class="keyword">elif</span> val &lt; root.val:</span><br><span class="line">			root.left = self.insert(root.left, val)</span><br><span class="line">		<span class="keyword">elif</span> val &gt; root.val:</span><br><span class="line">			root.right = self.insert(root.right, val)</span><br><span class="line">		<span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+<h3 id="03-删操作"><a href="#03-删操作" class="headerlink" title="03 删操作"></a>03 删操作</h3><p>删除操作复杂一些，根据子节点的个数，需要考虑如下三种情况：</p>
+<ol>
+<li>如果目标节点<strong>没有子节点</strong>，我们可以直接移除该目标节点。</li>
+<li>如果目标节<strong>只有一个子节点</strong>，我们可以用其子节点作为替换。</li>
+<li>如果目标节点<strong>有两个子节点</strong>，我们需要用其中序后继节点或者前驱节点来替换，再删除该目标节点。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除操作（删）</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">delete</span><span class="params">(self, root, key)</span>:</span></span><br><span class="line">		<span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> root.val == key:</span><br><span class="line">			<span class="keyword">if</span> root.left==<span class="literal">None</span> <span class="keyword">and</span> root.right==<span class="literal">None</span>:</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">			<span class="keyword">elif</span> root.left!=<span class="literal">None</span> <span class="keyword">and</span> root.right!=<span class="literal">None</span>:</span><br><span class="line">				<span class="comment"># buffer用于存放要替换节点的父节点,tmp是要替换的节点</span></span><br><span class="line">				buffer = <span class="literal">None</span></span><br><span class="line">				temp = root.right</span><br><span class="line">				<span class="keyword">while</span> temp.left:</span><br><span class="line">					buffer = temp</span><br><span class="line">					temp = temp.left</span><br><span class="line">				root.val, temp.val = temp.val, root.val</span><br><span class="line">				<span class="keyword">if</span> buffer == <span class="literal">None</span>:</span><br><span class="line">					root.right = self.delete(temp, key)</span><br><span class="line">				<span class="keyword">else</span>:</span><br><span class="line">					buffer.left = self.delete(buffer, key)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">			<span class="keyword">elif</span> root.left == <span class="literal">None</span>:</span><br><span class="line">				root = root.right</span><br><span class="line">			<span class="keyword">elif</span> root.right == <span class="literal">None</span>:</span><br><span class="line">				root = root.left</span><br><span class="line"></span><br><span class="line">		<span class="keyword">elif</span> root.val &gt; key:</span><br><span class="line">			root.left = self.delete(root.left, key)</span><br><span class="line">		<span class="keyword">elif</span> root.val &lt; key:</span><br><span class="line">			root.right = self.delete(root.right, key)</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> root</span><br></pre></td></tr></table></figure>
+<h3 id="04-改操作"><a href="#04-改操作" class="headerlink" title="04 改操作"></a>04 改操作</h3>这里的修改操作仅仅对结点值进行了修改，修改完以后并没有维护二叉搜索树的性质，后续还可以进一步改进。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改操作（改）</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">modify</span><span class="params">(self, root, val, new_val)</span>:</span></span><br><span class="line">		<span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">		<span class="keyword">elif</span> root.val &gt; val:</span><br><span class="line">			<span class="keyword">return</span> self.modify(root.left, val, new_val)</span><br><span class="line">		<span class="keyword">elif</span> root.val &lt; val:</span><br><span class="line">			<span class="keyword">return</span> self.modify(root.right, val, new_val)</span><br><span class="line">		<span class="keyword">elif</span> root.val == val:</span><br><span class="line">			root.val = new_val</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<h3 id="04-查操作"><a href="#04-查操作" class="headerlink" title="04 查操作"></a>04 查操作</h3></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查找操作（查）</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">search</span><span class="params">(self, root, val)</span>:</span></span><br><span class="line">		<span class="keyword">if</span> root == <span class="literal">None</span>:</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">		<span class="keyword">elif</span> root.val &gt; val:</span><br><span class="line">			<span class="keyword">return</span> self.search(root.left, val)</span><br><span class="line">		<span class="keyword">elif</span> root.val &lt; val:</span><br><span class="line">			<span class="keyword">return</span> self.search(root.right, val)</span><br><span class="line">		<span class="keyword">elif</span> root.val == val:</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Leetcode-2-两数相加" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -991,88 +1079,6 @@ pc-&gt;link=pa?pa:pb;
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-Crackme-2" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/02/20/Crackme-2/"
-    >Crackme_2</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/02/20/Crackme-2/" class="article-date">
-  <time datetime="2020-02-20T12:51:46.000Z" itemprop="datePublished">2020-02-20</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h1 id="第二个CrackMe"><a href="#第二个CrackMe" class="headerlink" title="第二个CrackMe"></a>第二个CrackMe</h1><h3 id="0x00-初步查壳"><a href="#0x00-初步查壳" class="headerlink" title="0x00 初步查壳"></a>0x00 初步查壳</h3><p>  <img src="https://img-blog.csdnimg.cn/2019042709530249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_12,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p> <img src="https://img-blog.csdnimg.cn/20190427101529926.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  无壳。但发现了MD5函数，后面要注意。<br>  先直接利用IDA静态分析。</p>
-<h3 id="0x01-静态分析"><a href="#0x01-静态分析" class="headerlink" title="0x01 静态分析"></a>0x01 静态分析</h3><p>  拖入IDA，发现DialogFunc函数，点开分析。<br>  <img src="https://img-blog.csdnimg.cn/20190427095647844.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_12,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  利用关键字符串，大致找到程序入口。</p>
-<h3 id="0x02-动态分析"><a href="#0x02-动态分析" class="headerlink" title="0x02 动态分析"></a>0x02 动态分析</h3><p>  拖入OD，定位至00401AAA,函数主体部分应该就在这附近了。<br>  <img src="https://img-blog.csdnimg.cn/20190427100334404.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>  往上翻一翻，看看能否找到关键函数。<br><img src="https://img-blog.csdnimg.cn/2019042710124424.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>  果然发现两个GetDlgItemTextA函数，都断下试试。<br><img src="https://img-blog.csdnimg.cn/20190427101408337.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="随便输入姓名和注册码"></p>
-<p> 随便输入姓名和注册码，按F9，发现两个点都被断下，但并未在寄存器中找到明显与注册码相关的数字。<br><img src="https://img-blog.csdnimg.cn/20190427102053977.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>继续往下查看，注意00401B13和00401B18两处的call函数，比较关键。跟入查看。果然在第二个call函数cm2.00401B79处发现端倪。<br><img src="https://img-blog.csdnimg.cn/20190427102405591.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h3 id="0x03-算法简单分析"><a href="#0x03-算法简单分析" class="headerlink" title="0x03 算法简单分析"></a>0x03 算法简单分析</h3><p>为了理解这里的四段函数，我们需要引入MD5的概念。</p>
-<blockquote>
-<p>1、数据初始化过程 首先要对需加密消息进行数据填充，使消息的长度对 512取模后等于448，消息长度 mod 512=448。不足位数 在消息（字符串）后面进行填充，填充第一位为1，其 余为0。即第一个字节为0x80,其余字节为0x00。<br> 2、添加消息长度 再填充上原消息的长度，例如欲加密字符为16个ASCII， 即16字节×8位=128位，16进制：0x80,但它是一个 QWORD值，占用8个字节。在此步骤进行完毕后，最 终消息长度就是512的整数倍。<br> 3、数据加密处理 准备需要用到的数据： 4个种子值： A = 0x67452301, B = 0xEFCDAB89, C = 0x98BADCFE, D = 0x10325476; 4个函数：F(X,Y,Z)=(X &amp; Y) | ((<del>X) &amp; Z); G(X,Y,Z)=(X &amp; Z) | (Y &amp; (</del>Z)); H(X,Y,Z)=X ^ Y ^ Z; I(X,Y,Z)=Y ^ (X | (~Z)); 把消息分以512位为一分组进行处理，每一个分组进行4轮变换， 以上面所说4个常数为起始变量进行计算，重新输出4个变量，以 这4个变量再进行下一分组的运算，如果已经是最后一个分组，则 这4个变量为最后的结果，即MD5值。</p>
-</blockquote>
-<p>由MD5加密的概念我们可以知道，这四组函数便是四个种子值，我们回到函数主体部分继续分析。<br><img src="https://img-blog.csdnimg.cn/20190427102750558.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述">由jnz可知，只要eax中字符串不为0则不跳转，即可跳出注册码成功的消息框。其实这题的答案已经很明显，就是String2，不过以我目前的水平还很难解释String2是如何计算出的……同时，经过测试，不同的name会产生不同的String2，这也进一步验证了此crackme的md5算法。</p>
-<p><img src="https://img-blog.csdnimg.cn/20190427103536737.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>结束。</p>
-<h3 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h3><p>不同的CrackMe总是有着不同的算法，还是那句话，能不爆破尽量不爆破，多分析加密算法才能更好地提升自我。</p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Reverse/" rel="tag">Reverse</a></li></ul>
 
 
     </footer>
