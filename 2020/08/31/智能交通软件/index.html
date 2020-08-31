@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Tensorflow2.0 softmax多分类问题实现 |  Ayer
+    智能交通软件 |  Ayer
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -33,7 +33,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-Tensorflow2-0-softmax多分类问题实现" class="article article-type-post" itemscope
+  <article id="post-智能交通软件" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -41,7 +41,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Tensorflow2.0 softmax多分类问题实现
+  智能交通软件
 </h1>
   
 
@@ -50,8 +50,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/02/15/Tensorflow2-0-softmax%E5%A4%9A%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98%E5%AE%9E%E7%8E%B0/" class="article-date">
-  <time datetime="2020-02-15T10:02:26.000Z" itemprop="datePublished">2020-02-15</time>
+      <a href="/2020/08/31/%E6%99%BA%E8%83%BD%E4%BA%A4%E9%80%9A%E8%BD%AF%E4%BB%B6/" class="article-date">
+  <time datetime="2020-08-31T07:59:06.000Z" itemprop="datePublished">2020-08-31</time>
 </a>
       
       
@@ -61,7 +61,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">761字</span>
+            <span class="post-count">414字</span>
         </span>
     </span>
 
@@ -70,7 +70,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">3分钟</span>
+            <span class="post-count">1分钟</span>
         </span>
     </span>
 </div>
@@ -97,58 +97,19 @@
       
 
       
-      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av62215565?p=9" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-使用sparse-categorical-crossentropy计算的情况"><a href="#0x00-使用sparse-categorical-crossentropy计算的情况" class="headerlink" title="0x00 使用sparse_categorical_crossentropy计算的情况"></a>0x00 使用sparse_categorical_crossentropy计算的情况</h2><p>我们在处理多分类问题是，最后一层的输出值一般是概率值，因此需要使用<code>softmax</code>函数作为激活函数。我们用 <code>fashion_mnist</code> 数据集作为实例，来具体解释<code>softmax</code>的用法。</p>
-<p>首先打开<code>jupyter notebook</code>，引入模块。  </p>
-<pre><code>import tensorflow as tf
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-%matplotlib inline</code></pre><p>初次加载需要下载。初始化训练集，测试集。</p>
-<pre><code>fashion_mnist = tf.keras.datasets.fashion_mnist.load_data()
-(train_image, train_label), (test_image, test_label) = fashion_mnist</code></pre><p>我们可以查看一下<code>train_label</code></p>
-<pre><code>train_label</code></pre><p>array([9, 0, 0, …, 3, 0, 5], dtype=uint8)</p>
-<p>label数组中的数据全为0-9，表示十种衣服的分类。</p>
-<p>接着进行归一化，除以255是因为图片灰度区间是0-255。  </p>
-<pre><code>train_image = train_image/255
-test_image = test_image/255</code></pre><p>查看图片形状。</p>
-<pre><code>train_image.shape</code></pre><p>(60000, 28, 28)</p>
-<p>接着建立模型。<br>第一层为Flatten层，因为Desne是将一维的数据映射到一维的数据，(28, 28)是二维数据，所以需要将它扁平化为一维数据,扁平成28*28的向量。注意所有“层”都是大写。  </p>
-<p>使用relu激活函数，输出128个隐藏单元，不能设置太小，因为如果Dense太小会舍弃掉很多信息。但也不能太大，否则会产生过拟合问题。</p>
-<p>最后要输出10个概率值，使用softmax激活，得到概率输出，10表示有十种衣服种类。</p>
-<pre><code>model = tf.keras.Sequential()
+      <h1 id="Intelligent-Traffic-Scene"><a href="#Intelligent-Traffic-Scene" class="headerlink" title="Intelligent-Traffic-Scene"></a>Intelligent-Traffic-Scene</h1><h1 id="交通场景智能应用软件"><a href="#交通场景智能应用软件" class="headerlink" title="交通场景智能应用软件"></a>交通场景智能应用软件</h1><p><a href="https://github.com/Gengarrr/Intelligent-Traffic-Scene" target="_blank" rel="noopener">Github源码</a></p>
+<h2 id="1️⃣-功能列表"><a href="#1️⃣-功能列表" class="headerlink" title="1️⃣ 功能列表"></a>1️⃣ 功能列表</h2><p>✅ 利用YOLOv3实现车辆、行人、红绿灯检测<br>✅ 利用HSV原理检测红绿灯颜色<br>✅ 利用HyperLPR实现车牌检测<br>✅ 目标分类统计、路段车流量统计，并将结果存储在Excel文件中<br>⭕ 更多高级的行为识别功能等待开发……  </p>
+<h2 id="2️⃣-源码说明"><a href="#2️⃣-源码说明" class="headerlink" title="2️⃣ 源码说明"></a>2️⃣ 源码说明</h2><p>通过Anaconda建立虚拟环境，cd至项目目录下，利用<code>requirements.txt</code>文件安装所需环境。  </p>
+<pre><code>pip install -r requirements.txt</code></pre><p>运行<code>Video_Player.py</code>文件，显示软件主界面。</p>
+<pre><code>python Video_Player.py</code></pre><h3 id="Video-Player-py"><a href="#Video-Player-py" class="headerlink" title="Video_Player.py"></a><code>Video_Player.py</code></h3><p>Pyqt5的软件界面。</p>
+<h3 id="Traffic-Scene-Detection-py"><a href="#Traffic-Scene-Detection-py" class="headerlink" title="Traffic_Scene_Detection.py"></a><code>Traffic_Scene_Detection.py</code></h3><p>程序主要文件，进行读取视频，目标检测识别。</p>
+<h3 id="utils-py"><a href="#utils-py" class="headerlink" title="utils.py"></a><code>utils.py</code></h3><p>保存各种对当前帧进行的操作。</p>
+<h2 id="3️⃣-软件使用说明"><a href="#3️⃣-软件使用说明" class="headerlink" title="3️⃣ 软件使用说明"></a>3️⃣ 软件使用说明</h2><p><img src="https://s1.ax1x.com/2020/08/31/dOKwh8.png" alt="dOKwh8.png"></p>
+<p>运行程序后，主界面如上图所示，中间界面为视频播放区域，下方依次为：<br>① 工具图标：选择视频文件进行识别检测处理；<br>② 文件夹图标：选择视频文件进行播放；<br>③ 箭头图标及进度条：播放/暂停键，右侧为视频播放进度条。  </p>
+<p>界面最下方为当前状态提示信息，默认情况下显示信息如图所示。使用处理按钮选中文件以后，程序进入处理状态，此时提示信息会变为<code>视频处理中，请耐心等待。</code>。视频处理完毕，结果视频将自动保存，提示信息为<code>结果已存放于: +&quot;存放路径&quot;</code>。</p>
+<h2 id="4️⃣-软件截图"><a href="#4️⃣-软件截图" class="headerlink" title="4️⃣ 软件截图"></a>4️⃣ 软件截图</h2><p><a href="https://imgchr.com/i/dOGFEj" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/08/31/dOGFEj.png" alt="dOGFEj.png"></a></p>
+<h2 id="5️⃣-编写过程中使用的开源代码-教程"><a href="#5️⃣-编写过程中使用的开源代码-教程" class="headerlink" title="5️⃣ 编写过程中使用的开源代码/教程"></a>5️⃣ 编写过程中使用的开源代码/教程</h2><p>🚩 <a href="https://github.com/zeusees/HyperLPR" target="_blank" rel="noopener">HyperLPR高性能车牌检测</a><br>🚩 <a href="https://www.bilibili.com/video/BV1r5411t7Db" target="_blank" rel="noopener">YOLOv3安装教程</a><br>🚩 <a href="https://www.bilibili.com/video/BV1oJ411D71z" target="_blank" rel="noopener">OpenCV教程</a></p>
 
-model.add(tf.keras.layers.Flatten(input_shape=(28,28)))
-model.add(tf.keras.layers.Dense(128, activation=&apos;relu&apos;))
-model.add(tf.keras.layers.Dense(10, activation=&apos;softmax&apos;))</code></pre><p>在tf.keras里，对于多分类问题我们使用<code>categorical_crossentropy</code>和<code>sparse_categorical_crossentropy</code>来计算softmax交叉熵。<br><code>metrics</code>:衡量指标</p>
-<pre><code>model.compile(optimizer=&apos;adam&apos;,
-         loss = &apos;sparse_categorical_crossentropy&apos;,
-         metrics=[&apos;acc&apos;])</code></pre><p>model.fit进行训练，<code>epochs</code>设置为10，表示训练10轮。<br>可以看到最后训练的正确率为0.9094。</p>
-<img src='https://s2.ax1x.com/2020/02/15/1zEzcV.png' width=60%>
-
-<p>使用测试集来测试正确率，得到正确率为0.8797。</p>
-<pre><code>model.evaluate(test_image, test_label)</code></pre><h2 id="0x01-使用categorical-crossentropy计算的情况"><a href="#0x01-使用categorical-crossentropy计算的情况" class="headerlink" title="0x01 使用categorical_crossentropy计算的情况"></a>0x01 使用categorical_crossentropy计算的情况</h2><p>当label进行独热编码时，使用<code>categorical_crossentropy</code>。</p>
-<p>独热编码举例：北京[1, 0, 0] 上海[0, 1, 0] 深圳[0, 0, 1]</p>
-<p>独热编码详解：<a href="https://www.cnblogs.com/zongfa/p/9305657.html" target="_blank" rel="noopener">https://www.cnblogs.com/zongfa/p/9305657.html</a></p>
-<p>使用<code>keras</code>带有的模块进行编码。</p>
-<pre><code>train_label_onehot = tf.keras.utils.to_categorical(train_label)
-test_label_onehot = tf.keras.utils.to_categorical(test_label)</code></pre><p>对编码后的数据进行查看。</p>
-<img src='https://s2.ax1x.com/2020/02/15/1zZKx0.png' width=60%>
-
-<p>构建模型的步骤与之前相同，但注意<code>train_label</code>已经变为独热编码，所以编译时损失函数应当使用<code>categorical_crossentropy</code>。</p>
-<pre><code>model = tf.keras.Sequential()
-model.add(tf.keras.layers.Flatten(input_shape=(28,28)))
-model.add(tf.keras.layers.Dense(128, activation=&apos;relu&apos;))
-model.add(tf.keras.layers.Dense(10, activation=&apos;softmax&apos;))
-
-model.compile(optimizer=&apos;adam&apos;,
-            loss = &apos;categorical_crossentropy&apos;,
-            metrics=[&apos;acc&apos;])</code></pre><p>进行训练。</p>
-<img src='https://s2.ax1x.com/2020/02/15/1zZbJs.png' width=50%>
-
-<p>进行预测。predict每一项都是长度为10的数组，这个数组的每一项依次表示该图片是0-9标签的概率值。因此，该数组的最大项就是模型所预测的最后结果。调用<code>np.argmax(predict[0])</code>和<code>test_label[0]</code>发现都为9，表示预测正确。</p>
-<pre><code>predict = model.predict(test_image)
-np.argmax(predict[0])
-test_label[0]</code></pre>
       
       <!-- reward -->
       
@@ -213,14 +174,14 @@ test_label[0]</code></pre>
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/02/15/Tensorflow2-0-softmax%E5%A4%9A%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98%E5%AE%9E%E7%8E%B0/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://gengarrr.github.io/2020/08/31/%E6%99%BA%E8%83%BD%E4%BA%A4%E9%80%9A%E8%BD%AF%E4%BB%B6/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tensorflow-2-0/" rel="tag">Tensorflow 2.0</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Project/" rel="tag">Project</a></li></ul>
 
 
     </footer>
@@ -231,19 +192,10 @@ test_label[0]</code></pre>
   
   <nav class="article-nav">
     
-      <a href="/2020/02/17/tensorflow2-0-%E4%BC%98%E5%8C%96%E5%87%BD%E6%95%B0%E3%80%81%E5%AD%A6%E4%B9%A0%E9%80%9F%E7%8E%87%E3%80%81%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%AE%97%E6%B3%95/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            tensorflow2.0-优化函数、学习速率、反向传播算法
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/02/14/Tensorflow2-0-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E5%AE%9E%E7%8E%B0/" class="article-nav-link">
+      <a href="/2020/07/08/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91-%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5(Python)/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Tensorflow2.0 逻辑回归实现</div>
+        <div class="article-nav-title">二叉搜索树-增删改查(Python)</div>
       </a>
     
   </nav>

@@ -107,7 +107,7 @@ import matplotlib.pyplot as plt
 %matplotlib inline
 
 data = pd.read_csv(&apos;D:/TensorFlow/tensorflow2.0/dataset/credit-a.csv&apos;, header=None)</code></pre><p>使用<code>data.head()</code>指令可以查看前五个数据。</p>
-<img src="https://s2.ax1x.com/2020/02/15/1zP6gS.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/15/1zP6gS.png' width=60%>
 
 <p><code>x</code>将数据表格最后一列之前的数据作为输入特征值，<code>y</code>表示最后一列，但是注意要将1和-1替换成-1和0，用来表示是否是信用诈骗。  </p>
 <p>接着顺序添加各神经网络层，Dense表示全连接层，第一层的<code>shape</code>为(15,)表示输入数据的维度为15，第二层的输入不需要判断，因为默认与第一层相同。最后一层因为所输出的是一个逻辑判断，因此使用<code>sigmoid</code>模型。第一第二层均为隐藏层。</p>
@@ -118,7 +118,7 @@ model = tf.keras.Sequential()
 model.add(tf.keras.layers.Dense(4, input_shape=(15,), activation=&apos;relu&apos;))
 model.add(tf.keras.layers.Dense(4, activation=&apos;relu&apos;))
 model.add(tf.keras.layers.Dense(1, activation=&apos;sigmoid&apos;))</code></pre><p>通过<code>model.summary()</code>可以进行预览。   </p>
-<img src="https://s2.ax1x.com/2020/02/15/1zip8K.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/15/1zip8K.png' width=60%>
 
 <p>进行编译与训练，优化算法选择<code>adam</code>，损失函数选择二元交叉熵函数，并将训练次数<code>epochs</code>设置为200： </p>
 <pre><code>model.compile(optimizer=&apos;adam&apos;, loss=&apos;binary_crossentropy&apos;,
@@ -217,11 +217,6 @@ plt.plot(history.epoch, history.history.get(&apos;acc&apos;))</code></pre>
         </div>
       </a>
     
-    
-      <a href="/2020/02/12/hello-world/" class="article-nav-link">
-        <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Hello World</div>
-      </a>
     
   </nav>
 

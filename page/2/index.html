@@ -67,6 +67,336 @@
     
     
     
+    <article id="post-Tensorflow2-0-IMDB评论文本分类" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/"
+    >Tensorflow2.0 IMDB评论文本分类</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" class="article-date">
+  <time datetime="2020-02-29T08:54:06.000Z" itemprop="datePublished">2020-02-29</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av71867574" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-文本预处理"><a href="#0x00-文本预处理" class="headerlink" title="0x00 文本预处理"></a>0x00 文本预处理</h2><p>在对训练数据集之前，我们需要对训练文本进行预处理，很多时候预处理其实比训练本身要花费更多的时间…预处理代码如下：</p>
+<pre><code>import tensorflow as tf
+from tensorflow import keras
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+data = tf.keras.datasets.imdb
+(train_data, train_labels), (test_data, test_labels) = data.load_data(num_words = 88000)
+
+word_index = data.get_word_index()
+
+word_index = {k:(v+3) for k,v in word_index.items()}
+word_index[&quot;&lt;PAD&gt;&quot;] = 0
+word_index[&quot;&lt;START&gt;&quot;] = 1
+word_index[&quot;&lt;UNK&gt;&quot;] = 2
+word_index[&quot;&lt;UNUSED&gt;&quot;] = 3
+
+reverse_word_index = dict([(value, key) for (key, value) in word_index.items()])
+
+train_data = keras.preprocessing.sequence.pad_sequences(train_data, value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
+test_data = keras.preprocessing.sequence.pad_sequences(test_data, value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
+
+def decode_review(text):
+    return &quot; &quot;.join([reverse_word_index.get(i, &quot;?&quot;) for i in text])</code></pre><h2 id="0x01-训练过程"><a href="#0x01-训练过程" class="headerlink" title="0x01 训练过程"></a>0x01 训练过程</h2><p><code>Embedding</code>层的作用：创建<strong>单词向量</strong>，并根据单词相关程度区分它们。   </p>
+<p><code>GlobalAverage1D</code>层的作用：将任何尺寸的数据放入其中并将其放在一个较低的维度。</p>
+<p><code>DENSE</code>层的作用：尝试对单词进行分类并掌握单词模式(pattern)，最终提升网络准确性(accuracy)</p>
+<p>其中<code>binary_cross_entropy</code>是二分类的交叉熵，实际是多分类<code>softmax_cross_entropy</code>的一种特殊情况，当多分类中，类别只有两类时，即0或者1，即为二分类，二分类也是一个逻辑回归问题，也可以套用逻辑回归的损失函数。</p>
+<p>model.fit中的batch_size：一轮训练的数据量。<br>    # model down here</p>
+<pre><code>model = keras.Sequential()
+model.add(keras.layers.Embedding(88000, 16))
+model.add(keras.layers.GlobalAveragePooling1D())
+model.add(keras.layers.Dense(16, activation=&apos;relu&apos;))
+model.add(keras.layers.Dense(1, activation=&apos;sigmoid&apos;))
+
+model.summary()
+model.compile(optimizer=&quot;adam&quot;, loss=&quot;binary_crossentropy&quot;, metrics=[&quot;accuracy&quot;])</code></pre><p>整个模型结构如下：</p>
+<img src='https://s2.ax1x.com/2020/02/29/3yBnc6.png' width=60%>
+
+
+<p>验证集选取前10000，训练集选取10000以后的。</p>
+<pre><code>x_val = train_data[:10000]
+x_train = train_data[10000:]
+
+y_val = train_labels[:10000]
+y_train = train_labels[10000:]
+
+fitModel = model.fit(x_train, y_train,epochs=40, batch_size=512,
+                    validation_data=(x_val, y_val), verbose=1)
+
+results = model.evaluate(test_data, test_labels)</code></pre><p>最后训练得出损失值是<code>0.3283079787778854</code>，正确率是<code>0.87256</code>。</p>
+<h2 id="0x02-保存模型"><a href="#0x02-保存模型" class="headerlink" title="0x02 保存模型"></a>0x02 保存模型</h2><p>用如下的代码便可以很轻松的保存模型，保存在当前目录下。</p>
+<pre><code>model.save(&quot;model.h5&quot;) 
+model = keras.models.load_model(&quot;model.h5&quot;)</code></pre><h2 id="0x03-模型测试"><a href="#0x03-模型测试" class="headerlink" title="0x03 模型测试"></a>0x03 模型测试</h2><p>打开测试集文件，同样注意要进行文本预处理，<strong>细节</strong>很重要。</p>
+<pre><code>def review_encode(s):
+    encoded = [1]
+
+    for word in s:
+        if word.lower() in word_index:
+            encoded.append(word_index[word.lower()])
+        else:
+            encoded.append(2)
+
+    return encoded
+
+
+with open(&quot;test.txt&quot;, encoding=&quot;utf-8&quot;) as f:
+    for line in f.readlines():
+        nline = line.replace(&quot;,&quot;,&quot;&quot;).replace(&quot;.&quot;, &quot;&quot;).replace(&quot;(&quot;,&quot;&quot;).replace(&quot;)&quot;,&quot;&quot;).replace(&quot;:&quot;,&quot;&quot;).replace(&quot;\&quot;&quot;,&quot;&quot;).strip().split(&quot; &quot;)
+
+        encode = review_encode(nline)
+
+        encode = keras.preprocessing.sequence.pad_sequences([encode], value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
+        predict = model.predict(encode)
+        print(line)
+        print(encode)
+        print(predict[0])    </code></pre><p>最终得到的预测结果是<code>0.93312705</code>，表明是positive的评论。 </p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tensorflow-2-0/" rel="tag">Tensorflow 2.0</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
+    <article id="post-数据结构单链表相关题目" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/"
+    >数据结构单链表相关题目</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" class="article-date">
+  <time datetime="2020-02-23T09:08:04.000Z" itemprop="datePublished">2020-02-23</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h3 id="资料来源：CSDN"><a href="#资料来源：CSDN" class="headerlink" title="资料来源：CSDN"></a>资料来源：<a href="https://blog.csdn.net/weixin_44796147/article/details/100824206" target="_blank" rel="noopener">CSDN</a></h3><h2 id="题目一"><a href="#题目一" class="headerlink" title="题目一"></a>题目一</h2><p>完成下列算法填空，将两个有序递增的带表头结点的单链表合并为一个有序递增的单链表。<br>链表结点Node和链表SingleList结构体定义如下：</p>
+<pre><code>typedef struct node
+{
+    ElemType element;
+    struct node *link;
+}Node;
+typedef struct headerlist
+{
+    Node *head;
+    int n;
+}HeaderList;
+
+void MergeList1(HeaderList *La,HeaderList *Lb,HeaderList *Lc) { 
+    //合并链表La和Lb，合并后的新表使用头指针Lc指向 
+    Node *pa,*pb,*pc,*q;
+    pa=La-&gt;head-&gt;link; 
+    pb=Lb-&gt;head-&gt;link; 
+    pc=Lc-&gt;head; 
+    while(pa &amp;&amp; pb) {
+        if(____________________) { 
+            pc-&gt;link=pa; 
+            pc=pa; 
+            pa=pa-&gt;link; 
+            La-&gt;n--; 
+        }
+        else if(pa-&gt;element&gt;pb-&gt;element) { 
+            pc-&gt;link=___________; 
+            pc=________; 
+            pb=_________;
+            Lb-&gt;n--; 
+        } 
+        else { 
+            pc-&gt;link=pa; 
+            pc=pa; 
+            pa=_________; 
+            q=_________; 
+            free(pb); 
+            pb =q;
+        } 
+        Lc-&gt;n++; 
+    } 
+    pc-&gt;link=pa?pa:pb; //插入剩余段 Lc-&gt;n+=pa?La-&gt;n:Lb-&gt;n; 
+}</code></pre><p>解答</p>
+<pre><code>while(pa &amp;&amp; pb) {
+    if(pa-&gt;element&lt;pb-&gt;element) { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=pa-&gt;link; 
+        La-&gt;n--; }
+    else if(pa-&gt;element&gt;pb-&gt;element) { 
+        pc-&gt;link=___pb___; 
+        pc=__pb__; 
+        pb=__pb-&gt;link___;
+        Lb-&gt;n--; } 
+    else { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=__pa-&gt;link__; 
+        q=__pb-&gt;link__; 
+        free(pb); 
+        pb =q; } 
+Lc-&gt;n++; } 
+pc-&gt;link=pa?pa:pb;
+}</code></pre><p>这里的思路是源于​L-&gt;first=NULL; 题目要把链表首地址置为空，是要重新排列链表。<br>第一次循环，将q指向第二个结点，把第一个结点取下，然后拼到链表头结点上，然后p指针向后移；<br>第二次循环，将q指向第三个结点，把第二个结点取下，然后拼到头结点后、第一个结点前，然后p指针后移。以此类推，直到p移到了原链表的尾部结束循环。</p>
+<h2 id="题目二"><a href="#题目二" class="headerlink" title="题目二"></a>题目二</h2><p>请完成算法填空，实现带表头结点的单链表形式实现的队列上的元素入队与出队操作，队列和元素结点结构体定义如下：</p>
+<pre><code>typedef struct node
+{
+    ElemType element; 
+    struct node* link;   
+}Node;
+typedef struct queue
+{
+    Node* front; //注意front指向表头结点，非头结点
+    Node* rear; //指向尾结点
+}Queue;
+
+void EnQueue(Queue *Q, ElemType x)
+{
+    Node* p= (Node*)malloc(sizeof(Node));
+    ____________ = x;
+    p-&gt;link = NULL;
+    ____________=p;
+    Q-&gt;rear=p;
+}
+
+void DeQueue(Queue *Q)
+{     
+    //若队列为空，直接返回
+    if(___________ ==NULL)  
+            return; 
+    Node *p=_____________;
+    Q-&gt;front-&gt;link=___________;
+    free(p);
+        //若出队后，队列为空，则需重置rear
+    if(______________==NULL)
+        Q-&gt;rear=Q-&gt;front;//指向表头结点  
+} </code></pre><p>解答</p>
+<pre><code>while(pa &amp;&amp; pb) {
+    if(pa-&gt;element&lt;pb-&gt;element) { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=pa-&gt;link; 
+        La-&gt;n--; }
+    else if(pa-&gt;element&gt;pb-&gt;element) { 
+        pc-&gt;link=___pb___; 
+        pc=__pb__; 
+        pb=__pb-&gt;link___;
+        Lb-&gt;n--; } 
+    else { 
+        pc-&gt;link=pa; 
+        pc=pa; 
+        pa=__pa-&gt;link__; 
+        q=__pb-&gt;link__; 
+        free(pb); 
+        pb =q; } 
+Lc-&gt;n++; } 
+pc-&gt;link=pa?pa:pb;
+}</code></pre>
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Crackme-2" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -305,18 +635,18 @@ model.compile(optimizer=&apos;adam&apos;,
 # 加入validation参数，表示加入验证集
 history = model.fit(train_image, train_label_onehot, epochs=10,
                    validation_data=(test_image, test_label_onehot)) </code></pre><p>先前的训练结果：</p>
-<img src="https://s2.ax1x.com/2020/02/17/3iVEuR.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/17/3iVEuR.png' width=60%>
 
-<img src="https://s2.ax1x.com/2020/02/17/3iVtVP.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/17/3iVtVP.png' width=60%>
 
 <p>加入Dropout层抑制过拟合后的训练结果：</p>
-<img src="https://s2.ax1x.com/2020/02/17/3iVdPS.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/17/3iVdPS.png' width=60%>
 
-<img src="https://s2.ax1x.com/2020/02/17/3iVBvj.png" width="60%">    
+<img src='https://s2.ax1x.com/2020/02/17/3iVBvj.png' width=60%>    
 
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>过拟合：在训练数据上得分很高，在测试数据上得分相对比较低。<br>欠拟合：在训练数据上得分比较低，在测试数据上得分也比较低。<br>应对过拟合的方法：使用Dropout来抑制。<br>应对欠拟合的方法：增加神经网络深度。</p>
-<h3 id="Drop的原理：人为丢弃一些单元"><a href="#Drop的原理：人为丢弃一些单元" class="headerlink" title="Drop的原理：人为丢弃一些单元"></a>Drop的原理：人为丢弃一些单元</h3><img src="https://s2.ax1x.com/2020/02/17/3iZTSg.png" width="60%">
+<h3 id="Drop的原理：人为丢弃一些单元"><a href="#Drop的原理：人为丢弃一些单元" class="headerlink" title="Drop的原理：人为丢弃一些单元"></a>Drop的原理：人为丢弃一些单元</h3><img src='https://s2.ax1x.com/2020/02/17/3iZTSg.png' width=60%>
 
 <h3 id="为什么Dropout可以解决过拟合？"><a href="#为什么Dropout可以解决过拟合？" class="headerlink" title="为什么Dropout可以解决过拟合？"></a>为什么Dropout可以解决过拟合？</h3><p>1.取平均的作用：先回到标准的模型.我们用相同的训练数据去训陈5个不同的神经网络，一般会得到5个不同的结果，<strong>此时我们可以采用“5个结果取均值”或者“多数取胜的投票策略”去决定最终结果</strong>。</p>
 <p>2.减少神经元之间复杂的共适应关系：因为 dropout程序导致两个神经元不一定每次都在一个 dropout网络中出现。这样<strong>权值的更新不再依赖于有固定关系的隐含节点的共同作用，阻止了某些特征仅仅在其它特定特征下才有效果的情况</strong>。</p>
@@ -469,7 +799,7 @@ history = model.fit(train_image, train_label_onehot, epochs=10,
 
       
       <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av62215565?p=9" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-多层感知器"><a href="#0x00-多层感知器" class="headerlink" title="0x00 多层感知器"></a>0x00 多层感知器</h2><p>我们首先回顾一下多层感知器的结构。<br>多层感知器: 输入层-&gt;隐含层(可以是多层)-&gt;输出层</p>
-<img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1525985364,3633287073&fm=15&gp=0.jpg" width="60%">
+<img src='https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1525985364,3633287073&fm=15&gp=0.jpg' width=60%>
 
 <p>其中输出层的特点： </p>
 <ol>
@@ -575,7 +905,7 @@ model.add(tf.keras.layers.Dense(10, activation=&apos;softmax&apos;))</code></pre
 <pre><code>model.compile(optimizer=&apos;adam&apos;,
          loss = &apos;sparse_categorical_crossentropy&apos;,
          metrics=[&apos;acc&apos;])</code></pre><p>model.fit进行训练，<code>epochs</code>设置为10，表示训练10轮。<br>可以看到最后训练的正确率为0.9094。</p>
-<img src="https://s2.ax1x.com/2020/02/15/1zEzcV.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/15/1zEzcV.png' width=60%>
 
 <p>使用测试集来测试正确率，得到正确率为0.8797。</p>
 <pre><code>model.evaluate(test_image, test_label)</code></pre><h2 id="0x01-使用categorical-crossentropy计算的情况"><a href="#0x01-使用categorical-crossentropy计算的情况" class="headerlink" title="0x01 使用categorical_crossentropy计算的情况"></a>0x01 使用categorical_crossentropy计算的情况</h2><p>当label进行独热编码时，使用<code>categorical_crossentropy</code>。</p>
@@ -584,7 +914,7 @@ model.add(tf.keras.layers.Dense(10, activation=&apos;softmax&apos;))</code></pre
 <p>使用<code>keras</code>带有的模块进行编码。</p>
 <pre><code>train_label_onehot = tf.keras.utils.to_categorical(train_label)
 test_label_onehot = tf.keras.utils.to_categorical(test_label)</code></pre><p>对编码后的数据进行查看。</p>
-<img src="https://s2.ax1x.com/2020/02/15/1zZKx0.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/15/1zZKx0.png' width=60%>
 
 <p>构建模型的步骤与之前相同，但注意<code>train_label</code>已经变为独热编码，所以编译时损失函数应当使用<code>categorical_crossentropy</code>。</p>
 <pre><code>model = tf.keras.Sequential()
@@ -595,7 +925,7 @@ model.add(tf.keras.layers.Dense(10, activation=&apos;softmax&apos;))
 model.compile(optimizer=&apos;adam&apos;,
             loss = &apos;categorical_crossentropy&apos;,
             metrics=[&apos;acc&apos;])</code></pre><p>进行训练。</p>
-<img src="https://s2.ax1x.com/2020/02/15/1zZbJs.png" width="50%">
+<img src='https://s2.ax1x.com/2020/02/15/1zZbJs.png' width=50%>
 
 <p>进行预测。predict每一项都是长度为10的数组，这个数组的每一项依次表示该图片是0-9标签的概率值。因此，该数组的最大项就是模型所预测的最后结果。调用<code>np.argmax(predict[0])</code>和<code>test_label[0]</code>发现都为9，表示预测正确。</p>
 <pre><code>predict = model.predict(test_image)
@@ -678,7 +1008,7 @@ import matplotlib.pyplot as plt
 %matplotlib inline
 
 data = pd.read_csv(&apos;D:/TensorFlow/tensorflow2.0/dataset/credit-a.csv&apos;, header=None)</code></pre><p>使用<code>data.head()</code>指令可以查看前五个数据。</p>
-<img src="https://s2.ax1x.com/2020/02/15/1zP6gS.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/15/1zP6gS.png' width=60%>
 
 <p><code>x</code>将数据表格最后一列之前的数据作为输入特征值，<code>y</code>表示最后一列，但是注意要将1和-1替换成-1和0，用来表示是否是信用诈骗。  </p>
 <p>接着顺序添加各神经网络层，Dense表示全连接层，第一层的<code>shape</code>为(15,)表示输入数据的维度为15，第二层的输入不需要判断，因为默认与第一层相同。最后一层因为所输出的是一个逻辑判断，因此使用<code>sigmoid</code>模型。第一第二层均为隐藏层。</p>
@@ -689,7 +1019,7 @@ model = tf.keras.Sequential()
 model.add(tf.keras.layers.Dense(4, input_shape=(15,), activation=&apos;relu&apos;))
 model.add(tf.keras.layers.Dense(4, activation=&apos;relu&apos;))
 model.add(tf.keras.layers.Dense(1, activation=&apos;sigmoid&apos;))</code></pre><p>通过<code>model.summary()</code>可以进行预览。   </p>
-<img src="https://s2.ax1x.com/2020/02/15/1zip8K.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/15/1zip8K.png' width=60%>
 
 <p>进行编译与训练，优化算法选择<code>adam</code>，损失函数选择二元交叉熵函数，并将训练次数<code>epochs</code>设置为200： </p>
 <pre><code>model.compile(optimizer=&apos;adam&apos;, loss=&apos;binary_crossentropy&apos;,
@@ -710,85 +1040,6 @@ plt.plot(history.epoch, history.history.get(&apos;acc&apos;))</code></pre>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tensorflow-2-0/" rel="tag">Tensorflow 2.0</a></li></ul>
 
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-hello-world" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/02/12/hello-world/"
-    >Hello World</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/02/12/hello-world/" class="article-date">
-  <time datetime="2020-02-12T11:19:44.481Z" itemprop="datePublished">2020-02-12</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
 
     </footer>
 

@@ -136,18 +136,18 @@ model.compile(optimizer=&apos;adam&apos;,
 # 加入validation参数，表示加入验证集
 history = model.fit(train_image, train_label_onehot, epochs=10,
                    validation_data=(test_image, test_label_onehot)) </code></pre><p>先前的训练结果：</p>
-<img src="https://s2.ax1x.com/2020/02/17/3iVEuR.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/17/3iVEuR.png' width=60%>
 
-<img src="https://s2.ax1x.com/2020/02/17/3iVtVP.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/17/3iVtVP.png' width=60%>
 
 <p>加入Dropout层抑制过拟合后的训练结果：</p>
-<img src="https://s2.ax1x.com/2020/02/17/3iVdPS.png" width="60%">
+<img src='https://s2.ax1x.com/2020/02/17/3iVdPS.png' width=60%>
 
-<img src="https://s2.ax1x.com/2020/02/17/3iVBvj.png" width="60%">    
+<img src='https://s2.ax1x.com/2020/02/17/3iVBvj.png' width=60%>    
 
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>过拟合：在训练数据上得分很高，在测试数据上得分相对比较低。<br>欠拟合：在训练数据上得分比较低，在测试数据上得分也比较低。<br>应对过拟合的方法：使用Dropout来抑制。<br>应对欠拟合的方法：增加神经网络深度。</p>
-<h3 id="Drop的原理：人为丢弃一些单元"><a href="#Drop的原理：人为丢弃一些单元" class="headerlink" title="Drop的原理：人为丢弃一些单元"></a>Drop的原理：人为丢弃一些单元</h3><img src="https://s2.ax1x.com/2020/02/17/3iZTSg.png" width="60%">
+<h3 id="Drop的原理：人为丢弃一些单元"><a href="#Drop的原理：人为丢弃一些单元" class="headerlink" title="Drop的原理：人为丢弃一些单元"></a>Drop的原理：人为丢弃一些单元</h3><img src='https://s2.ax1x.com/2020/02/17/3iZTSg.png' width=60%>
 
 <h3 id="为什么Dropout可以解决过拟合？"><a href="#为什么Dropout可以解决过拟合？" class="headerlink" title="为什么Dropout可以解决过拟合？"></a>为什么Dropout可以解决过拟合？</h3><p>1.取平均的作用：先回到标准的模型.我们用相同的训练数据去训陈5个不同的神经网络，一般会得到5个不同的结果，<strong>此时我们可以采用“5个结果取均值”或者“多数取胜的投票策略”去决定最终结果</strong>。</p>
 <p>2.减少神经元之间复杂的共适应关系：因为 dropout程序导致两个神经元不一定每次都在一个 dropout网络中出现。这样<strong>权值的更新不再依赖于有固定关系的隐含节点的共同作用，阻止了某些特征仅仅在其它特定特征下才有效果的情况</strong>。</p>

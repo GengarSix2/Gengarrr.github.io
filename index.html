@@ -67,6 +67,86 @@
     
     
     
+    <article id="post-智能交通软件" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/08/31/%E6%99%BA%E8%83%BD%E4%BA%A4%E9%80%9A%E8%BD%AF%E4%BB%B6/"
+    >智能交通软件</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/08/31/%E6%99%BA%E8%83%BD%E4%BA%A4%E9%80%9A%E8%BD%AF%E4%BB%B6/" class="article-date">
+  <time datetime="2020-08-31T07:59:06.000Z" itemprop="datePublished">2020-08-31</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h1 id="Intelligent-Traffic-Scene"><a href="#Intelligent-Traffic-Scene" class="headerlink" title="Intelligent-Traffic-Scene"></a>Intelligent-Traffic-Scene</h1><h1 id="交通场景智能应用软件"><a href="#交通场景智能应用软件" class="headerlink" title="交通场景智能应用软件"></a>交通场景智能应用软件</h1><p><a href="https://github.com/Gengarrr/Intelligent-Traffic-Scene" target="_blank" rel="noopener">Github源码</a></p>
+<h2 id="1️⃣-功能列表"><a href="#1️⃣-功能列表" class="headerlink" title="1️⃣ 功能列表"></a>1️⃣ 功能列表</h2><p>✅ 利用YOLOv3实现车辆、行人、红绿灯检测<br>✅ 利用HSV原理检测红绿灯颜色<br>✅ 利用HyperLPR实现车牌检测<br>✅ 目标分类统计、路段车流量统计，并将结果存储在Excel文件中<br>⭕ 更多高级的行为识别功能等待开发……  </p>
+<h2 id="2️⃣-源码说明"><a href="#2️⃣-源码说明" class="headerlink" title="2️⃣ 源码说明"></a>2️⃣ 源码说明</h2><p>通过Anaconda建立虚拟环境，cd至项目目录下，利用<code>requirements.txt</code>文件安装所需环境。  </p>
+<pre><code>pip install -r requirements.txt</code></pre><p>运行<code>Video_Player.py</code>文件，显示软件主界面。</p>
+<pre><code>python Video_Player.py</code></pre><h3 id="Video-Player-py"><a href="#Video-Player-py" class="headerlink" title="Video_Player.py"></a><code>Video_Player.py</code></h3><p>Pyqt5的软件界面。</p>
+<h3 id="Traffic-Scene-Detection-py"><a href="#Traffic-Scene-Detection-py" class="headerlink" title="Traffic_Scene_Detection.py"></a><code>Traffic_Scene_Detection.py</code></h3><p>程序主要文件，进行读取视频，目标检测识别。</p>
+<h3 id="utils-py"><a href="#utils-py" class="headerlink" title="utils.py"></a><code>utils.py</code></h3><p>保存各种对当前帧进行的操作。</p>
+<h2 id="3️⃣-软件使用说明"><a href="#3️⃣-软件使用说明" class="headerlink" title="3️⃣ 软件使用说明"></a>3️⃣ 软件使用说明</h2><p><img src="https://s1.ax1x.com/2020/08/31/dOKwh8.png" alt="dOKwh8.png"></p>
+<p>运行程序后，主界面如上图所示，中间界面为视频播放区域，下方依次为：<br>① 工具图标：选择视频文件进行识别检测处理；<br>② 文件夹图标：选择视频文件进行播放；<br>③ 箭头图标及进度条：播放/暂停键，右侧为视频播放进度条。  </p>
+<p>界面最下方为当前状态提示信息，默认情况下显示信息如图所示。使用处理按钮选中文件以后，程序进入处理状态，此时提示信息会变为<code>视频处理中，请耐心等待。</code>。视频处理完毕，结果视频将自动保存，提示信息为<code>结果已存放于: +&quot;存放路径&quot;</code>。</p>
+<h2 id="4️⃣-软件截图"><a href="#4️⃣-软件截图" class="headerlink" title="4️⃣ 软件截图"></a>4️⃣ 软件截图</h2><p><a href="https://imgchr.com/i/dOGFEj" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/08/31/dOGFEj.png" alt="dOGFEj.png"></a></p>
+<h2 id="5️⃣-编写过程中使用的开源代码-教程"><a href="#5️⃣-编写过程中使用的开源代码-教程" class="headerlink" title="5️⃣ 编写过程中使用的开源代码/教程"></a>5️⃣ 编写过程中使用的开源代码/教程</h2><p>🚩 <a href="https://github.com/zeusees/HyperLPR" target="_blank" rel="noopener">HyperLPR高性能车牌检测</a><br>🚩 <a href="https://www.bilibili.com/video/BV1r5411t7Db" target="_blank" rel="noopener">YOLOv3安装教程</a><br>🚩 <a href="https://www.bilibili.com/video/BV1oJ411D71z" target="_blank" rel="noopener">OpenCV教程</a></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Project/" rel="tag">Project</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-二叉搜索树-增删改查(Python)" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -155,6 +235,85 @@
 
 </article>
     
+    <article id="post-hello-world" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/05/07/hello-world/"
+    >Hello World</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/05/07/hello-world/" class="article-date">
+  <time datetime="2020-05-07T00:51:08.362Z" itemprop="datePublished">2020-05-07</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Leetcode-2-两数相加" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -194,7 +353,7 @@
       
 
       
-      <h3 id="两数相加"><a href="#两数相加" class="headerlink" title="两数相加"></a>两数相加</h3><img src="https://s1.ax1x.com/2020/04/09/G43d76.png" width="80%">   
+      <h3 id="两数相加"><a href="#两数相加" class="headerlink" title="两数相加"></a>两数相加</h3><img src='https://s1.ax1x.com/2020/04/09/G43d76.png' width=80%>   
 
 
 <h3 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h3><p>链表的逆序排列本身就符合加法从低位运算至高位的规则，因此我们只需要顺序遍历链表，同时记录下进位即可。        </p>
@@ -714,29 +873,29 @@
       
       <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av74959887?p=80" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-CNN-卷积神经网络"><a href="#0x00-CNN-卷积神经网络" class="headerlink" title="0x00 CNN:卷积神经网络"></a>0x00 CNN:卷积神经网络</h2><p><a href="https://blog.csdn.net/qq_36501027/article/details/83211682" target="_blank" rel="noopener">CSDN参考链接</a></p>
 <p>一般用于<strong>图像识别，视觉数据(visual data)</strong>。</p>
-<img src="https://s2.ax1x.com/2020/03/02/3fiUcq.png" width="60%">
+<img src='https://s2.ax1x.com/2020/03/02/3fiUcq.png' width=60%>
 
 <p>卷积神经网络的主要组成部分有：输入层、卷积层、池化层、全连接层。其中重点是卷积层与池化层。</p>
 <h3 id="卷积层："><a href="#卷积层：" class="headerlink" title="卷积层："></a>卷积层：</h3><p>卷积层是卷积神经网络（CNN）的核心，但是什么是卷积呢？卷积就是图片中的局部数据和卷积核的内积，它是为了提取图片局部的特征，那卷积核又是什么呢？卷积核又称过滤器（filter），如下图，其实就是一组带有固定的权重的神经元，一组二维矩阵，用来提取一组特定的特征，提取的特征一般称为feature map（特征映射）。至于卷积层就是多个filter的叠加形成的，至于通道就是理解为视角、角度。例如同样是提取边界特征的卷积核，可以按照R、G、B三种元素的角度提取边界，RGB在边界这个角度上有不同的表达；再比如需要检查一个人的机器学习能力，可以从特征工程、模型选择、参数调优等多个方面检测。（最初输入的图片样本的 channels，取决于图片类型，比如RGB；卷积操作完成后输出的 out_channels ，取决于卷积核的数量。此时的 out_channels 也会作为下一次卷积时的卷积核的 in_channels；卷积核中的 in_channels ，就是上一次卷积的 out_channels ，如果是第一次做卷积，就是样本图片的channels）</p>
-<img src="https://img-blog.csdn.net/20181021175409140?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2NTAxMDI3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" width="60%">
+<img src='https://img-blog.csdn.net/20181021175409140?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2NTAxMDI3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70' width=60%>
 
 <p>至于卷积层的参数问题，就不得不提CNN的两大“特色”了，局部感知和权值共享！在BPNN里，我们可以看见一张图片假如它是黑白的，也就是100x100x1，而隐藏层的节点数是100个，那也就是说权重就高达100x100x1x100+100=1000100个，这还是比较小的单通道图片，在现在这种小图片很少了，所以在CNN里必须的精简参数了，不然难以训练出一个好的模型！为了解决这个问题。，CNN就提出了<strong>局部感知</strong>和<strong>权值共享</strong>两个方法。</p>
 <h3 id="池化层："><a href="#池化层：" class="headerlink" title="池化层："></a>池化层：</h3><p><code>最大池化</code>思想很简单，以下图为例，把4x4的图像分割成4个不同的区域，然后输出每个区域的最大值，这就是最大池化所做的事情。其实这里我们选择了2x2的过滤器，步长为2。在一幅真正的图像中提取最大值可能意味着提取了某些特定特征，比如垂直边缘、一只眼睛等等。</p>
-<img src="https://img-blog.csdn.net/20181021181434387?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2NTAxMDI3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" width="60%">
+<img src='https://img-blog.csdn.net/20181021181434387?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2NTAxMDI3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70' width=60%>
 
 <p><code>平均池化</code>和最大池化唯一的不同是，它计算的是区域内的平均值而最大池化计算的是最大值。在日常应用使用最多的还是最大池化。</p>
 <p>总结：池化层不会改变矩阵的深度，但是它可以缩小矩阵的大小，也可以进一步减少全连接层的节点数，从而减少整个神经网络的参数个数。</p>
 <h2 id="0x01-RNN-循环神经网络"><a href="#0x01-RNN-循环神经网络" class="headerlink" title="0x01 RNN:循环神经网络"></a>0x01 RNN:循环神经网络</h2><p>[博客园参考链接]<a href="https://www.cnblogs.com/imzgmc/p/10632636.html" target="_blank" rel="noopener">https://www.cnblogs.com/imzgmc/p/10632636.html</a>)</p>
 <p>一般用于连续的数据(sequential data)。</p>
-<img src="https://s2.ax1x.com/2020/03/02/3fkCdO.png" width="60%">
+<img src='https://s2.ax1x.com/2020/03/02/3fkCdO.png' width=60%>
 
 <p>循环神经网络是一类用于处理序列数据的神经网络。它与其他神经网络的不同是，RNN可以更好的去处理序列的信息，即认准了前后的输入之间存在关系。在NLP (Natural Language Processing)中，去理解一整句话，孤立的理解组成这句话的词显然是不够的，我们需要整体的处理由这些词连接起来的整个序列。</p>
 <p>如：(1) 我饿了，我要去食堂<strong><em>。(2)  我饭卡丢了，我要去食堂</em></strong>。很显然，第一句话是想表明去食堂就餐，而第二句则很有可能因为刚吃过饭，发现饭卡不见了，去食堂寻找饭卡。而在此之前，我们常用的语言模型是N-Gram，无论何种语境，可能去食堂大概率匹配的是“吃饭”而不在乎之前的信息。RNN就解决了N-Gram的缺陷，它在理论上可以往前(后)看任意多个词。</p>
 <p>循环神经网络的大致结构：</p>
-<img src="https://s2.ax1x.com/2020/03/02/3fkL0f.png" width="60%">
+<img src='https://s2.ax1x.com/2020/03/02/3fkL0f.png' width=60%>
 
 <h2 id="0x02-今后学习的方向"><a href="#0x02-今后学习的方向" class="headerlink" title="0x02 今后学习的方向"></a>0x02 今后学习的方向</h2><p>CNN, RNN网络的实例<br>数据可视化<br>计算机视觉</p>
-<img src="https://s2.ax1x.com/2020/03/02/3fAKj1.png" width="60%">
+<img src='https://s2.ax1x.com/2020/03/02/3fAKj1.png' width=60%>
       
       <!-- reward -->
       
@@ -749,336 +908,6 @@
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Deep-Learning/" rel="tag">Deep Learning</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-Tensorflow2-0-IMDB评论文本分类" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/"
-    >Tensorflow2.0 IMDB评论文本分类</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/02/29/Tensorflow2-0-IMDB%E8%AF%84%E8%AE%BA%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB/" class="article-date">
-  <time datetime="2020-02-29T08:54:06.000Z" itemprop="datePublished">2020-02-29</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av71867574" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-文本预处理"><a href="#0x00-文本预处理" class="headerlink" title="0x00 文本预处理"></a>0x00 文本预处理</h2><p>在对训练数据集之前，我们需要对训练文本进行预处理，很多时候预处理其实比训练本身要花费更多的时间…预处理代码如下：</p>
-<pre><code>import tensorflow as tf
-from tensorflow import keras
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-
-data = tf.keras.datasets.imdb
-(train_data, train_labels), (test_data, test_labels) = data.load_data(num_words = 88000)
-
-word_index = data.get_word_index()
-
-word_index = {k:(v+3) for k,v in word_index.items()}
-word_index[&quot;&lt;PAD&gt;&quot;] = 0
-word_index[&quot;&lt;START&gt;&quot;] = 1
-word_index[&quot;&lt;UNK&gt;&quot;] = 2
-word_index[&quot;&lt;UNUSED&gt;&quot;] = 3
-
-reverse_word_index = dict([(value, key) for (key, value) in word_index.items()])
-
-train_data = keras.preprocessing.sequence.pad_sequences(train_data, value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
-test_data = keras.preprocessing.sequence.pad_sequences(test_data, value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
-
-def decode_review(text):
-    return &quot; &quot;.join([reverse_word_index.get(i, &quot;?&quot;) for i in text])</code></pre><h2 id="0x01-训练过程"><a href="#0x01-训练过程" class="headerlink" title="0x01 训练过程"></a>0x01 训练过程</h2><p><code>Embedding</code>层的作用：创建<strong>单词向量</strong>，并根据单词相关程度区分它们。   </p>
-<p><code>GlobalAverage1D</code>层的作用：将任何尺寸的数据放入其中并将其放在一个较低的维度。</p>
-<p><code>DENSE</code>层的作用：尝试对单词进行分类并掌握单词模式(pattern)，最终提升网络准确性(accuracy)</p>
-<p>其中<code>binary_cross_entropy</code>是二分类的交叉熵，实际是多分类<code>softmax_cross_entropy</code>的一种特殊情况，当多分类中，类别只有两类时，即0或者1，即为二分类，二分类也是一个逻辑回归问题，也可以套用逻辑回归的损失函数。</p>
-<p>model.fit中的batch_size：一轮训练的数据量。<br>    # model down here</p>
-<pre><code>model = keras.Sequential()
-model.add(keras.layers.Embedding(88000, 16))
-model.add(keras.layers.GlobalAveragePooling1D())
-model.add(keras.layers.Dense(16, activation=&apos;relu&apos;))
-model.add(keras.layers.Dense(1, activation=&apos;sigmoid&apos;))
-
-model.summary()
-model.compile(optimizer=&quot;adam&quot;, loss=&quot;binary_crossentropy&quot;, metrics=[&quot;accuracy&quot;])</code></pre><p>整个模型结构如下：</p>
-<img src="https://s2.ax1x.com/2020/02/29/3yBnc6.png" width="60%">
-
-
-<p>验证集选取前10000，训练集选取10000以后的。</p>
-<pre><code>x_val = train_data[:10000]
-x_train = train_data[10000:]
-
-y_val = train_labels[:10000]
-y_train = train_labels[10000:]
-
-fitModel = model.fit(x_train, y_train,epochs=40, batch_size=512,
-                    validation_data=(x_val, y_val), verbose=1)
-
-results = model.evaluate(test_data, test_labels)</code></pre><p>最后训练得出损失值是<code>0.3283079787778854</code>，正确率是<code>0.87256</code>。</p>
-<h2 id="0x02-保存模型"><a href="#0x02-保存模型" class="headerlink" title="0x02 保存模型"></a>0x02 保存模型</h2><p>用如下的代码便可以很轻松的保存模型，保存在当前目录下。</p>
-<pre><code>model.save(&quot;model.h5&quot;) 
-model = keras.models.load_model(&quot;model.h5&quot;)</code></pre><h2 id="0x03-模型测试"><a href="#0x03-模型测试" class="headerlink" title="0x03 模型测试"></a>0x03 模型测试</h2><p>打开测试集文件，同样注意要进行文本预处理，<strong>细节</strong>很重要。</p>
-<pre><code>def review_encode(s):
-    encoded = [1]
-
-    for word in s:
-        if word.lower() in word_index:
-            encoded.append(word_index[word.lower()])
-        else:
-            encoded.append(2)
-
-    return encoded
-
-
-with open(&quot;test.txt&quot;, encoding=&quot;utf-8&quot;) as f:
-    for line in f.readlines():
-        nline = line.replace(&quot;,&quot;,&quot;&quot;).replace(&quot;.&quot;, &quot;&quot;).replace(&quot;(&quot;,&quot;&quot;).replace(&quot;)&quot;,&quot;&quot;).replace(&quot;:&quot;,&quot;&quot;).replace(&quot;\&quot;&quot;,&quot;&quot;).strip().split(&quot; &quot;)
-
-        encode = review_encode(nline)
-
-        encode = keras.preprocessing.sequence.pad_sequences([encode], value=word_index[&quot;&lt;PAD&gt;&quot;], padding=&quot;post&quot;, maxlen=250)
-        predict = model.predict(encode)
-        print(line)
-        print(encode)
-        print(predict[0])    </code></pre><p>最终得到的预测结果是<code>0.93312705</code>，表明是positive的评论。 </p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tensorflow-2-0/" rel="tag">Tensorflow 2.0</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-数据结构单链表相关题目" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/"
-    >数据结构单链表相关题目</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/02/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8D%95%E9%93%BE%E8%A1%A8%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE/" class="article-date">
-  <time datetime="2020-02-23T09:08:04.000Z" itemprop="datePublished">2020-02-23</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h3 id="资料来源：CSDN"><a href="#资料来源：CSDN" class="headerlink" title="资料来源：CSDN"></a>资料来源：<a href="https://blog.csdn.net/weixin_44796147/article/details/100824206" target="_blank" rel="noopener">CSDN</a></h3><h2 id="题目一"><a href="#题目一" class="headerlink" title="题目一"></a>题目一</h2><p>完成下列算法填空，将两个有序递增的带表头结点的单链表合并为一个有序递增的单链表。<br>链表结点Node和链表SingleList结构体定义如下：</p>
-<pre><code>typedef struct node
-{
-    ElemType element;
-    struct node *link;
-}Node;
-typedef struct headerlist
-{
-    Node *head;
-    int n;
-}HeaderList;
-
-void MergeList1(HeaderList *La,HeaderList *Lb,HeaderList *Lc) { 
-    //合并链表La和Lb，合并后的新表使用头指针Lc指向 
-    Node *pa,*pb,*pc,*q;
-    pa=La-&gt;head-&gt;link; 
-    pb=Lb-&gt;head-&gt;link; 
-    pc=Lc-&gt;head; 
-    while(pa &amp;&amp; pb) {
-        if(____________________) { 
-            pc-&gt;link=pa; 
-            pc=pa; 
-            pa=pa-&gt;link; 
-            La-&gt;n--; 
-        }
-        else if(pa-&gt;element&gt;pb-&gt;element) { 
-            pc-&gt;link=___________; 
-            pc=________; 
-            pb=_________;
-            Lb-&gt;n--; 
-        } 
-        else { 
-            pc-&gt;link=pa; 
-            pc=pa; 
-            pa=_________; 
-            q=_________; 
-            free(pb); 
-            pb =q;
-        } 
-        Lc-&gt;n++; 
-    } 
-    pc-&gt;link=pa?pa:pb; //插入剩余段 Lc-&gt;n+=pa?La-&gt;n:Lb-&gt;n; 
-}</code></pre><p>解答</p>
-<pre><code>while(pa &amp;&amp; pb) {
-    if(pa-&gt;element&lt;pb-&gt;element) { 
-        pc-&gt;link=pa; 
-        pc=pa; 
-        pa=pa-&gt;link; 
-        La-&gt;n--; }
-    else if(pa-&gt;element&gt;pb-&gt;element) { 
-        pc-&gt;link=___pb___; 
-        pc=__pb__; 
-        pb=__pb-&gt;link___;
-        Lb-&gt;n--; } 
-    else { 
-        pc-&gt;link=pa; 
-        pc=pa; 
-        pa=__pa-&gt;link__; 
-        q=__pb-&gt;link__; 
-        free(pb); 
-        pb =q; } 
-Lc-&gt;n++; } 
-pc-&gt;link=pa?pa:pb;
-}</code></pre><p>这里的思路是源于​L-&gt;first=NULL; 题目要把链表首地址置为空，是要重新排列链表。<br>第一次循环，将q指向第二个结点，把第一个结点取下，然后拼到链表头结点上，然后p指针向后移；<br>第二次循环，将q指向第三个结点，把第二个结点取下，然后拼到头结点后、第一个结点前，然后p指针后移。以此类推，直到p移到了原链表的尾部结束循环。</p>
-<h2 id="题目二"><a href="#题目二" class="headerlink" title="题目二"></a>题目二</h2><p>请完成算法填空，实现带表头结点的单链表形式实现的队列上的元素入队与出队操作，队列和元素结点结构体定义如下：</p>
-<pre><code>typedef struct node
-{
-    ElemType element; 
-    struct node* link;   
-}Node;
-typedef struct queue
-{
-    Node* front; //注意front指向表头结点，非头结点
-    Node* rear; //指向尾结点
-}Queue;
-
-void EnQueue(Queue *Q, ElemType x)
-{
-    Node* p= (Node*)malloc(sizeof(Node));
-    ____________ = x;
-    p-&gt;link = NULL;
-    ____________=p;
-    Q-&gt;rear=p;
-}
-
-void DeQueue(Queue *Q)
-{     
-    //若队列为空，直接返回
-    if(___________ ==NULL)  
-            return; 
-    Node *p=_____________;
-    Q-&gt;front-&gt;link=___________;
-    free(p);
-        //若出队后，队列为空，则需重置rear
-    if(______________==NULL)
-        Q-&gt;rear=Q-&gt;front;//指向表头结点  
-} </code></pre><p>解答</p>
-<pre><code>while(pa &amp;&amp; pb) {
-    if(pa-&gt;element&lt;pb-&gt;element) { 
-        pc-&gt;link=pa; 
-        pc=pa; 
-        pa=pa-&gt;link; 
-        La-&gt;n--; }
-    else if(pa-&gt;element&gt;pb-&gt;element) { 
-        pc-&gt;link=___pb___; 
-        pc=__pb__; 
-        pb=__pb-&gt;link___;
-        Lb-&gt;n--; } 
-    else { 
-        pc-&gt;link=pa; 
-        pc=pa; 
-        pa=__pa-&gt;link__; 
-        q=__pb-&gt;link__; 
-        free(pb); 
-        pb =q; } 
-Lc-&gt;n++; } 
-pc-&gt;link=pa?pa:pb;
-}</code></pre>
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li></ul>
 
 
     </footer>
