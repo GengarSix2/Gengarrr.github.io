@@ -67,6 +67,186 @@
     
     
     
+    <article id="post-Tensorflow2.0-Cats vs Dogs" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/08/Tensorflow2.0-Cats%20vs%20Dogs/"
+    >Course2-Part2-Cats vs Dogs</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/09/08/Tensorflow2.0-Cats%20vs%20Dogs/" class="article-date">
+  <time datetime="2020-09-08T12:20:06.000Z" itemprop="datePublished">2020-09-08</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <p>学习目标：  </p>
+<ol>
+<li>学习处理<code>猫狗数据集</code></li>
+<li>搭建神经网络学习两者之间的区别</li>
+<li>计算训练集和验证集的正确率</li>
+</ol>
+<h2 id="Explore-the-Example-Data"><a href="#Explore-the-Example-Data" class="headerlink" title="Explore the Example Data"></a>Explore the Example Data</h2><p><code>cats_and_dogs_filtered</code>文件夹结构：   </p>
+<p>train<br>——cats<br>——dogs<br>validation<br>——cats<br>——dogs    </p>
+<p>初始化训练集和验证集。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">base_dir = <span class="string">'./cats_and_dogs_filtered'</span></span><br><span class="line"></span><br><span class="line">train_dir = os.path.join(base_dir, <span class="string">'train'</span>)</span><br><span class="line">validation_dir = os.path.join(base_dir, <span class="string">'validation'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Directory of training cat/dog pictures</span></span><br><span class="line">train_cats_dir = os.path.join(train_dir, <span class="string">'cats'</span>)</span><br><span class="line">train_dogs_dir = os.path.join(train_dir, <span class="string">'dogs'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Directory of validation cat/dog pictures</span></span><br><span class="line">validation_cats_dir = os.path.join(validation_dir, <span class="string">'cats'</span>)</span><br><span class="line">validation_cats_dir = os.path.join(validation_dir, <span class="string">'dogs'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>我们有1000张训练集猫/狗图片和500验证集猫/狗图片，接下来通过配置<code>matplot</code>参数来更好地观察数据集。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib.image <span class="keyword">as</span> mpimg</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置输出图片的大小</span></span><br><span class="line">nrows = <span class="number">4</span></span><br><span class="line">ncols = <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 遍历图片的下标</span></span><br><span class="line">pic_index = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>现在以8张cat，8张dog为一轮，展示图片。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">fig = plt.gcf()</span><br><span class="line">fig.set_size_inches(ncols*<span class="number">4</span>, nrows*<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">pic_index += <span class="number">8</span></span><br><span class="line"></span><br><span class="line">next_cat_pix = [os.path.join(train_cats_dir, fname)</span><br><span class="line">                <span class="keyword">for</span> fname <span class="keyword">in</span> train_cat_fnames[pic_index<span class="number">-8</span>:pic_index]</span><br><span class="line">               ]</span><br><span class="line"></span><br><span class="line">next_dog_pix = [os.path.join(train_dogs_dir, fname)</span><br><span class="line">                <span class="keyword">for</span> fname <span class="keyword">in</span> train_dog_fnames[pic_index<span class="number">-8</span>:pic_index]</span><br><span class="line">               ]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i, img_path <span class="keyword">in</span> enumerate(next_cat_pix+next_dog_pix):</span><br><span class="line">    <span class="comment"># 设置子图 参数分别为：行数、列数、索引值</span></span><br><span class="line">    sp = plt.subplot(nrows, ncols, i+<span class="number">1</span>)</span><br><span class="line">    sp.axis(<span class="string">'off'</span>) <span class="comment"># 不显示图片坐标</span></span><br><span class="line">    img = mpimg.imread(img_path)</span><br><span class="line">    plt.imshow(img)</span><br><span class="line">    plt.imshow(img)</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="output_6_0.png" alt="png"></p>
+<h2 id="Building-Model"><a href="#Building-Model" class="headerlink" title="Building Model"></a>Building Model</h2><p>由于我们的原始图片具有不同的尺寸，在训练前需要将他们resize成统一的尺寸，我们选择150x150，接下来开始定义model。</p>
+<p>我们首先定义了一个<code>Sequential</code>顺序层，加入一些卷积层，注意图片的尺寸。<br>接着再增加一些卷积层，并且<code>flatten</code>最终结果，以便进入<code>dense</code>全连接层。<br>最后加入全连接层，由于我们处理的是二分类问题，因而使用<code>sigmoid</code>激活函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line">model = tf.keras.models.Sequential([</span><br><span class="line">    <span class="comment"># 注意输入图片格式 </span></span><br><span class="line">    tf.keras.layers.Conv2D(<span class="number">16</span>, (<span class="number">3</span>,<span class="number">3</span>), activation=<span class="string">'relu'</span>, input_shape=(<span class="number">150</span>,<span class="number">150</span>,<span class="number">3</span>)),</span><br><span class="line">    tf.keras.layers.MaxPooling2D(<span class="number">2</span>,<span class="number">2</span>),</span><br><span class="line">    tf.keras.layers.Conv2D(<span class="number">32</span>, (<span class="number">3</span>,<span class="number">3</span>), activation=<span class="string">'relu'</span>),</span><br><span class="line">    tf.keras.layers.MaxPooling2D(<span class="number">2</span>,<span class="number">2</span>),</span><br><span class="line">    tf.keras.layers.Conv2D(<span class="number">64</span>, (<span class="number">3</span>,<span class="number">3</span>), activation=<span class="string">'relu'</span>),</span><br><span class="line">    tf.keras.layers.MaxPooling2D(<span class="number">2</span>,<span class="number">2</span>),</span><br><span class="line">    tf.keras.layers.Flatten(),</span><br><span class="line">    tf.keras.layers.Dense(<span class="number">512</span>, activation=<span class="string">'relu'</span>),</span><br><span class="line">    <span class="comment"># 最终输出只有一个值</span></span><br><span class="line">    tf.keras.layers.Dense(<span class="number">1</span>, activation=<span class="string">'sigmoid'</span>)</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看模型结构参数</span></span><br><span class="line">model.summary()</span><br></pre></td></tr></table></figure>
+
+<pre><code>Model: &quot;sequential&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d (Conv2D)              (None, 148, 148, 16)      448       
+_________________________________________________________________
+max_pooling2d (MaxPooling2D) (None, 74, 74, 16)        0         
+_________________________________________________________________
+conv2d_1 (Conv2D)            (None, 72, 72, 32)        4640      
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 36, 36, 32)        0         
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 34, 34, 64)        18496     
+_________________________________________________________________
+max_pooling2d_2 (MaxPooling2 (None, 17, 17, 64)        0         
+_________________________________________________________________
+flatten (Flatten)            (None, 18496)             0         
+_________________________________________________________________
+dense (Dense)                (None, 512)               9470464   
+_________________________________________________________________
+dense_1 (Dense)              (None, 1)                 513       
+=================================================================
+Total params: 9,494,561
+Trainable params: 9,494,561
+Non-trainable params: 0
+_________________________________________________________________</code></pre><p>因为是二分类问题，所以我们用<code>binary_crossentropy</code>来训练模型，并且使用<code>rmsprop</code>优化函数和<code>0.001</code>的训练率。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras.optimizers <span class="keyword">import</span> RMSprop</span><br><span class="line"></span><br><span class="line">model.compile(optimizer = RMSprop(lr=<span class="number">0.001</span>),</span><br><span class="line">              loss = <span class="string">'binary_crossentropy'</span>,</span><br><span class="line">              metrics = [<span class="string">'accuracy'</span>]</span><br><span class="line">             )</span><br></pre></td></tr></table></figure>
+
+<h2 id="Data-Preprocessing"><a href="#Data-Preprocessing" class="headerlink" title="Data Preprocessing"></a>Data Preprocessing</h2><p>图片在进入神经网络训练前需要进行预处理，将像素值归一化，设置成<code>[0, 1]</code>之间的值。  </p>
+<p>使用说明：<br>In Keras this can be done via the <code>keras.preprocessing.image.ImageDataGenerator</code>class using the <code>rescale</code>parameter. This <code>ImageDataGenerator</code> class allows you to instantiate generators of augmented image batches (and their labels) via <code>.flow(data, labels)</code> or <code>.flow_from_directory(directory)</code>. These generators can then be used with the Keras model methods that accept data generators as inputs: <code>fit</code>, <code>evaluate_generator</code>, and <code>predict_generator</code>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras.preprocessing.image <span class="keyword">import</span> ImageDataGenerator</span><br><span class="line"></span><br><span class="line"><span class="comment"># All images will be rescaled by 1./255</span></span><br><span class="line">train_datagen = ImageDataGenerator(rescale = <span class="number">1.0</span>/<span class="number">255.</span>)</span><br><span class="line">test_datagen = ImageDataGenerator(rescale = <span class="number">1.0</span>/<span class="number">255.</span>)</span><br><span class="line"></span><br><span class="line">train_generator = train_datagen.flow_from_directory(train_dir,</span><br><span class="line">                                                   batch_size = <span class="number">20</span>,</span><br><span class="line">                                                   class_mode = <span class="string">'binary'</span>,</span><br><span class="line">                                                   target_size = (<span class="number">150</span>, <span class="number">150</span>))</span><br><span class="line"></span><br><span class="line">validation_generator = test_datagen.flow_from_directory(validation_dir,</span><br><span class="line">                                                      batch_size = <span class="number">20</span>,</span><br><span class="line">                                                      class_mode = <span class="string">'binary'</span>,</span><br><span class="line">                                                      target_size = (<span class="number">150</span>, <span class="number">150</span>))</span><br></pre></td></tr></table></figure>
+
+<pre><code>Found 2000 images belonging to 2 classes.
+Found 1000 images belonging to 2 classes.</code></pre><h2 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h2><p>训练2000张图片，15轮，并用1000张图片进行验证。<br>主要关注四个参数： Loss, Accuracy, Validation Loss and Validation Accuracy。<br>之所以验证集上的正确率低一些，是因为发生了<code>过拟合</code>现象。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">history = model.fit(train_generator,</span><br><span class="line">                   validation_data = validation_generator,</span><br><span class="line">                   steps_per_epoch = <span class="number">100</span>,</span><br><span class="line">                   epochs = <span class="number">15</span>,</span><br><span class="line">                   validation_steps = <span class="number">50</span>,</span><br><span class="line">                   verbose = <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<pre><code>Train for 100 steps, validate for 50 steps
+Epoch 1/15
+100/100 - 31s - loss: 0.7254 - accuracy: 0.5840 - val_loss: 0.6983 - val_accuracy: 0.5330
+Epoch 2/15
+100/100 - 6s - loss: 0.6174 - accuracy: 0.6715 - val_loss: 0.6289 - val_accuracy: 0.6620
+Epoch 3/15
+100/100 - 6s - loss: 0.5303 - accuracy: 0.7365 - val_loss: 0.5830 - val_accuracy: 0.7130
+Epoch 4/15
+100/100 - 7s - loss: 0.4546 - accuracy: 0.7885 - val_loss: 0.6252 - val_accuracy: 0.6840
+Epoch 5/15
+100/100 - 6s - loss: 0.3735 - accuracy: 0.8315 - val_loss: 0.7358 - val_accuracy: 0.6750
+Epoch 6/15
+100/100 - 6s - loss: 0.2905 - accuracy: 0.8655 - val_loss: 0.6466 - val_accuracy: 0.6810
+Epoch 7/15
+100/100 - 6s - loss: 0.2130 - accuracy: 0.9230 - val_loss: 0.8432 - val_accuracy: 0.7120
+Epoch 8/15
+100/100 - 6s - loss: 0.1432 - accuracy: 0.9455 - val_loss: 0.8759 - val_accuracy: 0.6890
+Epoch 9/15
+100/100 - 6s - loss: 0.1003 - accuracy: 0.9665 - val_loss: 1.0862 - val_accuracy: 0.7040
+Epoch 10/15
+100/100 - 7s - loss: 0.0769 - accuracy: 0.9760 - val_loss: 1.3929 - val_accuracy: 0.7180
+Epoch 11/15
+100/100 - 7s - loss: 0.0566 - accuracy: 0.9835 - val_loss: 1.5369 - val_accuracy: 0.7070
+Epoch 12/15
+100/100 - 7s - loss: 0.0353 - accuracy: 0.9870 - val_loss: 1.7776 - val_accuracy: 0.6920
+Epoch 13/15
+100/100 - 6s - loss: 0.0353 - accuracy: 0.9900 - val_loss: 1.9454 - val_accuracy: 0.7190
+Epoch 14/15
+100/100 - 6s - loss: 0.0549 - accuracy: 0.9875 - val_loss: 1.8197 - val_accuracy: 0.7270
+Epoch 15/15
+100/100 - 6s - loss: 0.0347 - accuracy: 0.9915 - val_loss: 1.9393 - val_accuracy: 0.7340</code></pre><h2 id="Visualizing-Intermediate-Representations"><a href="#Visualizing-Intermediate-Representations" class="headerlink" title="Visualizing Intermediate Representations"></a>Visualizing Intermediate Representations</h2><p>将中间结果可视化，可以查看各种特征。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span>   tensorflow.keras.preprocessing.image <span class="keyword">import</span> img_to_array, load_img</span><br><span class="line"></span><br><span class="line"><span class="comment"># Let's define a new Model that will take an image as input, and will output</span></span><br><span class="line"><span class="comment"># intermediate representations for all layers in the previous model after</span></span><br><span class="line"><span class="comment"># the first.</span></span><br><span class="line">successive_outputs = [layer.output <span class="keyword">for</span> layer <span class="keyword">in</span> model.layers[<span class="number">1</span>:]]</span><br><span class="line"></span><br><span class="line"><span class="comment">#visualization_model = Model(img_input, successive_outputs)</span></span><br><span class="line">visualization_model = tf.keras.models.Model(inputs = model.input, outputs = successive_outputs)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Let's prepare a random input image of a cat or dog from the training set.</span></span><br><span class="line">cat_img_files = [os.path.join(train_cats_dir, f) <span class="keyword">for</span> f <span class="keyword">in</span> train_cat_fnames]</span><br><span class="line">dog_img_files = [os.path.join(train_dogs_dir, f) <span class="keyword">for</span> f <span class="keyword">in</span> train_dog_fnames]</span><br><span class="line"></span><br><span class="line">img_path = random.choice(cat_img_files + dog_img_files)</span><br><span class="line">img = load_img(img_path, target_size=(<span class="number">150</span>, <span class="number">150</span>))  <span class="comment"># this is a PIL image</span></span><br><span class="line"></span><br><span class="line">x   = img_to_array(img)                           <span class="comment"># Numpy array with shape (150, 150, 3)</span></span><br><span class="line">x   = x.reshape((<span class="number">1</span>,) + x.shape)                   <span class="comment"># Numpy array with shape (1, 150, 150, 3)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Rescale by 1/255</span></span><br><span class="line">x /= <span class="number">255.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Let's run our image through our network, thus obtaining all</span></span><br><span class="line"><span class="comment"># intermediate representations for this image.</span></span><br><span class="line">successive_feature_maps = visualization_model.predict(x)</span><br><span class="line"></span><br><span class="line"><span class="comment"># These are the names of the layers, so can have them as part of our plot</span></span><br><span class="line">layer_names = [layer.name <span class="keyword">for</span> layer <span class="keyword">in</span> model.layers]</span><br><span class="line"></span><br><span class="line"><span class="comment"># -----------------------------------------------------------------------</span></span><br><span class="line"><span class="comment"># Now let's display our representations</span></span><br><span class="line"><span class="comment"># -----------------------------------------------------------------------</span></span><br><span class="line"><span class="keyword">for</span> layer_name, feature_map <span class="keyword">in</span> zip(layer_names, successive_feature_maps):</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> len(feature_map.shape) == <span class="number">4</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#-------------------------------------------</span></span><br><span class="line">    <span class="comment"># Just do this for the conv / maxpool layers, not the fully-connected layers</span></span><br><span class="line">    <span class="comment">#-------------------------------------------</span></span><br><span class="line">    n_features = feature_map.shape[<span class="number">-1</span>]  <span class="comment"># number of features in the feature map</span></span><br><span class="line">    size       = feature_map.shape[ <span class="number">1</span>]  <span class="comment"># feature map shape (1, size, size, n_features)</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># We will tile our images in this matrix</span></span><br><span class="line">    display_grid = np.zeros((size, size * n_features))</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#-------------------------------------------------</span></span><br><span class="line">    <span class="comment"># Postprocess the feature to be visually palatable</span></span><br><span class="line">    <span class="comment">#-------------------------------------------------</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n_features):</span><br><span class="line">      x  = feature_map[<span class="number">0</span>, :, :, i]</span><br><span class="line">      x -= x.mean()</span><br><span class="line">      x /= x.std ()</span><br><span class="line">      x *=  <span class="number">64</span></span><br><span class="line">      x += <span class="number">128</span></span><br><span class="line">      x  = np.clip(x, <span class="number">0</span>, <span class="number">255</span>).astype(<span class="string">'uint8'</span>)</span><br><span class="line">      display_grid[:, i * size : (i + <span class="number">1</span>) * size] = x <span class="comment"># Tile each filter into a horizontal grid</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#-----------------</span></span><br><span class="line">    <span class="comment"># Display the grid</span></span><br><span class="line">    <span class="comment">#-----------------</span></span><br><span class="line"></span><br><span class="line">    scale = <span class="number">20.</span> / n_features</span><br><span class="line">    plt.figure( figsize=(scale * n_features, scale) )</span><br><span class="line">    plt.title ( layer_name )</span><br><span class="line">    plt.grid  ( <span class="literal">False</span> )</span><br><span class="line">    plt.imshow( display_grid, aspect=<span class="string">'auto'</span>, cmap=<span class="string">'viridis'</span> )</span><br></pre></td></tr></table></figure>
+
+<pre><code>D:\Anaconda\anaconda\envs\tf2.0\lib\site-packages\ipykernel_launcher.py:55: RuntimeWarning: invalid value encountered in true_divide</code></pre><p><img src="output_17_1.png" alt="png"></p>
+<p><img src="output_17_2.png" alt="png"></p>
+<p><img src="output_17_3.png" alt="png"></p>
+<p><img src="output_17_4.png" alt="png"></p>
+<p><img src="output_17_5.png" alt="png"></p>
+<h2 id="Evaluating-Accuracy-and-Loss-for-the-Model"><a href="#Evaluating-Accuracy-and-Loss-for-the-Model" class="headerlink" title="Evaluating Accuracy and Loss for the Model"></a>Evaluating Accuracy and Loss for the Model</h2><p>将训练集/验证集的正确率/损失率可视化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#-----------------------------------------------------------</span></span><br><span class="line"><span class="comment"># Retrieve a list of list results on training and test data</span></span><br><span class="line"><span class="comment"># sets for each training epoch</span></span><br><span class="line"><span class="comment">#-----------------------------------------------------------</span></span><br><span class="line">acc      = history.history[     <span class="string">'accuracy'</span> ]</span><br><span class="line">val_acc  = history.history[ <span class="string">'val_accuracy'</span> ]</span><br><span class="line">loss     = history.history[    <span class="string">'loss'</span> ]</span><br><span class="line">val_loss = history.history[<span class="string">'val_loss'</span> ]</span><br><span class="line"></span><br><span class="line">epochs   = range(len(acc)) <span class="comment"># Get number of epochs</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#------------------------------------------------</span></span><br><span class="line"><span class="comment"># Plot training and validation accuracy per epoch</span></span><br><span class="line"><span class="comment">#------------------------------------------------</span></span><br><span class="line">plt.plot  ( epochs,     acc )</span><br><span class="line">plt.plot  ( epochs, val_acc )</span><br><span class="line">plt.title (<span class="string">'Training and validation accuracy'</span>)</span><br><span class="line">plt.figure()</span><br><span class="line"></span><br><span class="line"><span class="comment">#------------------------------------------------</span></span><br><span class="line"><span class="comment"># Plot training and validation loss per epoch</span></span><br><span class="line"><span class="comment">#------------------------------------------------</span></span><br><span class="line">plt.plot  ( epochs,     loss )</span><br><span class="line">plt.plot  ( epochs, val_loss )</span><br><span class="line">plt.title (<span class="string">'Training and validation loss'</span>   )</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>Text(0.5, 1.0, &apos;Training and validation loss&apos;)</code></pre><p><img src="output_19_1.png" alt="png"></p>
+<p><img src="output_19_2.png" alt="png"></p>
+<p>如上图所示，产生了过拟合问题，训练集的正确率接近100%，然而验证集正确率下降至70%。  </p>
+<p>由于我们使用的样本量相对较小（2000份），过拟合会成为一个问题。当一个模型接受了较小的样本量，却没有适应新数据时，会发生过拟合问题。因为模型会开始使用不相关的特征进行预测。例如，如果你作为一个人类，只看到三个伐木工人的形象和三个水手的形象，其中唯一一个戴帽子的是伐木工人，你可能会开始认为戴帽子是一个伐木工人的标志，而不是一个水手。然后你会做出一个相当糟糕的伐木工人/水手分类器。  </p>
+<p>过度拟合是机器学习中的核心问题：既然我们正在将模型的参数拟合到给定的数据集，那么我们如何确保模型学习到的表示将适用于从未见过的数据？我们如何避免学习基于特定训练集的东西？</p>
+<p>在下一个练习中，我们将研究如何在猫与狗的分类模型中防止过度拟合。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tensorflow-2-0/" rel="tag">Tensorflow 2.0</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-智能交通软件" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -816,98 +996,6 @@
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cryptography/" rel="tag">Cryptography</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-CNN与RNN的比较" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/03/02/CNN%E4%B8%8ERNN%E7%9A%84%E6%AF%94%E8%BE%83/"
-    >CNN与RNN的比较</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/03/02/CNN%E4%B8%8ERNN%E7%9A%84%E6%AF%94%E8%BE%83/" class="article-date">
-  <time datetime="2020-03-02T13:53:33.000Z" itemprop="datePublished">2020-03-02</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av74959887?p=80" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-CNN-卷积神经网络"><a href="#0x00-CNN-卷积神经网络" class="headerlink" title="0x00 CNN:卷积神经网络"></a>0x00 CNN:卷积神经网络</h2><p><a href="https://blog.csdn.net/qq_36501027/article/details/83211682" target="_blank" rel="noopener">CSDN参考链接</a></p>
-<p>一般用于<strong>图像识别，视觉数据(visual data)</strong>。</p>
-<img src='https://s2.ax1x.com/2020/03/02/3fiUcq.png' width=60%>
-
-<p>卷积神经网络的主要组成部分有：输入层、卷积层、池化层、全连接层。其中重点是卷积层与池化层。</p>
-<h3 id="卷积层："><a href="#卷积层：" class="headerlink" title="卷积层："></a>卷积层：</h3><p>卷积层是卷积神经网络（CNN）的核心，但是什么是卷积呢？卷积就是图片中的局部数据和卷积核的内积，它是为了提取图片局部的特征，那卷积核又是什么呢？卷积核又称过滤器（filter），如下图，其实就是一组带有固定的权重的神经元，一组二维矩阵，用来提取一组特定的特征，提取的特征一般称为feature map（特征映射）。至于卷积层就是多个filter的叠加形成的，至于通道就是理解为视角、角度。例如同样是提取边界特征的卷积核，可以按照R、G、B三种元素的角度提取边界，RGB在边界这个角度上有不同的表达；再比如需要检查一个人的机器学习能力，可以从特征工程、模型选择、参数调优等多个方面检测。（最初输入的图片样本的 channels，取决于图片类型，比如RGB；卷积操作完成后输出的 out_channels ，取决于卷积核的数量。此时的 out_channels 也会作为下一次卷积时的卷积核的 in_channels；卷积核中的 in_channels ，就是上一次卷积的 out_channels ，如果是第一次做卷积，就是样本图片的channels）</p>
-<img src='https://img-blog.csdn.net/20181021175409140?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2NTAxMDI3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70' width=60%>
-
-<p>至于卷积层的参数问题，就不得不提CNN的两大“特色”了，局部感知和权值共享！在BPNN里，我们可以看见一张图片假如它是黑白的，也就是100x100x1，而隐藏层的节点数是100个，那也就是说权重就高达100x100x1x100+100=1000100个，这还是比较小的单通道图片，在现在这种小图片很少了，所以在CNN里必须的精简参数了，不然难以训练出一个好的模型！为了解决这个问题。，CNN就提出了<strong>局部感知</strong>和<strong>权值共享</strong>两个方法。</p>
-<h3 id="池化层："><a href="#池化层：" class="headerlink" title="池化层："></a>池化层：</h3><p><code>最大池化</code>思想很简单，以下图为例，把4x4的图像分割成4个不同的区域，然后输出每个区域的最大值，这就是最大池化所做的事情。其实这里我们选择了2x2的过滤器，步长为2。在一幅真正的图像中提取最大值可能意味着提取了某些特定特征，比如垂直边缘、一只眼睛等等。</p>
-<img src='https://img-blog.csdn.net/20181021181434387?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2NTAxMDI3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70' width=60%>
-
-<p><code>平均池化</code>和最大池化唯一的不同是，它计算的是区域内的平均值而最大池化计算的是最大值。在日常应用使用最多的还是最大池化。</p>
-<p>总结：池化层不会改变矩阵的深度，但是它可以缩小矩阵的大小，也可以进一步减少全连接层的节点数，从而减少整个神经网络的参数个数。</p>
-<h2 id="0x01-RNN-循环神经网络"><a href="#0x01-RNN-循环神经网络" class="headerlink" title="0x01 RNN:循环神经网络"></a>0x01 RNN:循环神经网络</h2><p>[博客园参考链接]<a href="https://www.cnblogs.com/imzgmc/p/10632636.html" target="_blank" rel="noopener">https://www.cnblogs.com/imzgmc/p/10632636.html</a>)</p>
-<p>一般用于连续的数据(sequential data)。</p>
-<img src='https://s2.ax1x.com/2020/03/02/3fkCdO.png' width=60%>
-
-<p>循环神经网络是一类用于处理序列数据的神经网络。它与其他神经网络的不同是，RNN可以更好的去处理序列的信息，即认准了前后的输入之间存在关系。在NLP (Natural Language Processing)中，去理解一整句话，孤立的理解组成这句话的词显然是不够的，我们需要整体的处理由这些词连接起来的整个序列。</p>
-<p>如：(1) 我饿了，我要去食堂<strong><em>。(2)  我饭卡丢了，我要去食堂</em></strong>。很显然，第一句话是想表明去食堂就餐，而第二句则很有可能因为刚吃过饭，发现饭卡不见了，去食堂寻找饭卡。而在此之前，我们常用的语言模型是N-Gram，无论何种语境，可能去食堂大概率匹配的是“吃饭”而不在乎之前的信息。RNN就解决了N-Gram的缺陷，它在理论上可以往前(后)看任意多个词。</p>
-<p>循环神经网络的大致结构：</p>
-<img src='https://s2.ax1x.com/2020/03/02/3fkL0f.png' width=60%>
-
-<h2 id="0x02-今后学习的方向"><a href="#0x02-今后学习的方向" class="headerlink" title="0x02 今后学习的方向"></a>0x02 今后学习的方向</h2><p>CNN, RNN网络的实例<br>数据可视化<br>计算机视觉</p>
-<img src='https://s2.ax1x.com/2020/03/02/3fAKj1.png' width=60%>
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Deep-Learning/" rel="tag">Deep Learning</a></li></ul>
 
 
     </footer>

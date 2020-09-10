@@ -67,6 +67,98 @@
     
     
     
+    <article id="post-CNN与RNN的比较" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/03/02/CNN%E4%B8%8ERNN%E7%9A%84%E6%AF%94%E8%BE%83/"
+    >CNN与RNN的比较</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/03/02/CNN%E4%B8%8ERNN%E7%9A%84%E6%AF%94%E8%BE%83/" class="article-date">
+  <time datetime="2020-03-02T13:53:33.000Z" itemprop="datePublished">2020-03-02</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h3 id="学习资料：B站教程"><a href="#学习资料：B站教程" class="headerlink" title="学习资料：B站教程"></a>学习资料：<a href="https://www.bilibili.com/video/av74959887?p=80" target="_blank" rel="noopener">B站教程</a></h3><h2 id="0x00-CNN-卷积神经网络"><a href="#0x00-CNN-卷积神经网络" class="headerlink" title="0x00 CNN:卷积神经网络"></a>0x00 CNN:卷积神经网络</h2><p><a href="https://blog.csdn.net/qq_36501027/article/details/83211682" target="_blank" rel="noopener">CSDN参考链接</a></p>
+<p>一般用于<strong>图像识别，视觉数据(visual data)</strong>。</p>
+<img src='https://s2.ax1x.com/2020/03/02/3fiUcq.png' width=60%>
+
+<p>卷积神经网络的主要组成部分有：输入层、卷积层、池化层、全连接层。其中重点是卷积层与池化层。</p>
+<h3 id="卷积层："><a href="#卷积层：" class="headerlink" title="卷积层："></a>卷积层：</h3><p>卷积层是卷积神经网络（CNN）的核心，但是什么是卷积呢？卷积就是图片中的局部数据和卷积核的内积，它是为了提取图片局部的特征，那卷积核又是什么呢？卷积核又称过滤器（filter），如下图，其实就是一组带有固定的权重的神经元，一组二维矩阵，用来提取一组特定的特征，提取的特征一般称为feature map（特征映射）。至于卷积层就是多个filter的叠加形成的，至于通道就是理解为视角、角度。例如同样是提取边界特征的卷积核，可以按照R、G、B三种元素的角度提取边界，RGB在边界这个角度上有不同的表达；再比如需要检查一个人的机器学习能力，可以从特征工程、模型选择、参数调优等多个方面检测。（最初输入的图片样本的 channels，取决于图片类型，比如RGB；卷积操作完成后输出的 out_channels ，取决于卷积核的数量。此时的 out_channels 也会作为下一次卷积时的卷积核的 in_channels；卷积核中的 in_channels ，就是上一次卷积的 out_channels ，如果是第一次做卷积，就是样本图片的channels）</p>
+<img src='https://img-blog.csdn.net/20181021175409140?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2NTAxMDI3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70' width=60%>
+
+<p>至于卷积层的参数问题，就不得不提CNN的两大“特色”了，局部感知和权值共享！在BPNN里，我们可以看见一张图片假如它是黑白的，也就是100x100x1，而隐藏层的节点数是100个，那也就是说权重就高达100x100x1x100+100=1000100个，这还是比较小的单通道图片，在现在这种小图片很少了，所以在CNN里必须的精简参数了，不然难以训练出一个好的模型！为了解决这个问题。，CNN就提出了<strong>局部感知</strong>和<strong>权值共享</strong>两个方法。</p>
+<h3 id="池化层："><a href="#池化层：" class="headerlink" title="池化层："></a>池化层：</h3><p><code>最大池化</code>思想很简单，以下图为例，把4x4的图像分割成4个不同的区域，然后输出每个区域的最大值，这就是最大池化所做的事情。其实这里我们选择了2x2的过滤器，步长为2。在一幅真正的图像中提取最大值可能意味着提取了某些特定特征，比如垂直边缘、一只眼睛等等。</p>
+<img src='https://img-blog.csdn.net/20181021181434387?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM2NTAxMDI3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70' width=60%>
+
+<p><code>平均池化</code>和最大池化唯一的不同是，它计算的是区域内的平均值而最大池化计算的是最大值。在日常应用使用最多的还是最大池化。</p>
+<p>总结：池化层不会改变矩阵的深度，但是它可以缩小矩阵的大小，也可以进一步减少全连接层的节点数，从而减少整个神经网络的参数个数。</p>
+<h2 id="0x01-RNN-循环神经网络"><a href="#0x01-RNN-循环神经网络" class="headerlink" title="0x01 RNN:循环神经网络"></a>0x01 RNN:循环神经网络</h2><p>[博客园参考链接]<a href="https://www.cnblogs.com/imzgmc/p/10632636.html" target="_blank" rel="noopener">https://www.cnblogs.com/imzgmc/p/10632636.html</a>)</p>
+<p>一般用于连续的数据(sequential data)。</p>
+<img src='https://s2.ax1x.com/2020/03/02/3fkCdO.png' width=60%>
+
+<p>循环神经网络是一类用于处理序列数据的神经网络。它与其他神经网络的不同是，RNN可以更好的去处理序列的信息，即认准了前后的输入之间存在关系。在NLP (Natural Language Processing)中，去理解一整句话，孤立的理解组成这句话的词显然是不够的，我们需要整体的处理由这些词连接起来的整个序列。</p>
+<p>如：(1) 我饿了，我要去食堂<strong><em>。(2)  我饭卡丢了，我要去食堂</em></strong>。很显然，第一句话是想表明去食堂就餐，而第二句则很有可能因为刚吃过饭，发现饭卡不见了，去食堂寻找饭卡。而在此之前，我们常用的语言模型是N-Gram，无论何种语境，可能去食堂大概率匹配的是“吃饭”而不在乎之前的信息。RNN就解决了N-Gram的缺陷，它在理论上可以往前(后)看任意多个词。</p>
+<p>循环神经网络的大致结构：</p>
+<img src='https://s2.ax1x.com/2020/03/02/3fkL0f.png' width=60%>
+
+<h2 id="0x02-今后学习的方向"><a href="#0x02-今后学习的方向" class="headerlink" title="0x02 今后学习的方向"></a>0x02 今后学习的方向</h2><p>CNN, RNN网络的实例<br>数据可视化<br>计算机视觉</p>
+<img src='https://s2.ax1x.com/2020/03/02/3fAKj1.png' width=60%>
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Deep-Learning/" rel="tag">Deep Learning</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Tensorflow2-0-IMDB评论文本分类" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
