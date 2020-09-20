@@ -67,6 +67,183 @@
     
     
     
+    <article id="post-RockPaperScissors" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/09/20/RockPaperScissors/"
+    >Course2-Part2-RockPaperScissors</a
+  >
+</h2>
+  
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      <a href="/2020/09/20/RockPaperScissors/" class="article-date">
+  <time datetime="2020-09-20T09:20:06.000Z" itemprop="datePublished">2020-09-20</time>
+</a>
+      
+      
+      
+      
+    </div>
+    
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+      <h2 id="RockPaperScissors"><a href="#RockPaperScissors" class="headerlink" title="RockPaperScissors"></a>RockPaperScissors</h2><p>首先导入数据集。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">rock_dir = os.path.join(<span class="string">'./rps/rock'</span>)</span><br><span class="line">paper_dir = os.path.join(<span class="string">'./rps/paper'</span>)</span><br><span class="line">scissors_dir = os.path.join(<span class="string">'./rps/scissors'</span>)</span><br><span class="line"></span><br><span class="line">print(<span class="string">'total training rock images:'</span>, len(os.listdir(rock_dir)))</span><br><span class="line">print(<span class="string">'total training paper images:'</span>, len(os.listdir(paper_dir)))</span><br><span class="line">print(<span class="string">'total training scissors images:'</span>, len(os.listdir(scissors_dir)))</span><br><span class="line"></span><br><span class="line">rock_files = os.listdir(rock_dir)</span><br><span class="line">print(rock_files[:<span class="number">10</span>])</span><br><span class="line"></span><br><span class="line">paper_files = os.listdir(paper_dir)</span><br><span class="line">print(paper_files[:<span class="number">10</span>])</span><br><span class="line"></span><br><span class="line">scissors_files = os.listdir(scissors_dir)</span><br><span class="line">print(scissors_files[:<span class="number">10</span>])</span><br></pre></td></tr></table></figure>
+
+<pre><code>total training rock images: 840
+total training paper images: 840
+total training scissors images: 840
+[&apos;rock01-000.png&apos;, &apos;rock01-001.png&apos;, &apos;rock01-002.png&apos;, &apos;rock01-003.png&apos;, &apos;rock01-004.png&apos;, &apos;rock01-005.png&apos;, &apos;rock01-006.png&apos;, &apos;rock01-007.png&apos;, &apos;rock01-008.png&apos;, &apos;rock01-009.png&apos;]
+[&apos;paper01-000.png&apos;, &apos;paper01-001.png&apos;, &apos;paper01-002.png&apos;, &apos;paper01-003.png&apos;, &apos;paper01-004.png&apos;, &apos;paper01-005.png&apos;, &apos;paper01-006.png&apos;, &apos;paper01-007.png&apos;, &apos;paper01-008.png&apos;, &apos;paper01-009.png&apos;]
+[&apos;scissors01-000.png&apos;, &apos;scissors01-001.png&apos;, &apos;scissors01-002.png&apos;, &apos;scissors01-003.png&apos;, &apos;scissors01-004.png&apos;, &apos;scissors01-005.png&apos;, &apos;scissors01-006.png&apos;, &apos;scissors01-007.png&apos;, &apos;scissors01-008.png&apos;, &apos;scissors01-009.png&apos;]</code></pre><p>查看数据集。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> matplotlib.image <span class="keyword">as</span> mpimg</span><br><span class="line"></span><br><span class="line">pic_index = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">next_rock = [os.path.join(rock_dir, fname) </span><br><span class="line">             <span class="keyword">for</span> fname <span class="keyword">in</span> rock_files[pic_index<span class="number">-2</span>:pic_index]]</span><br><span class="line">next_paper = [os.path.join(paper_dir, fname)</span><br><span class="line">             <span class="keyword">for</span> fname <span class="keyword">in</span> paper_files[pic_index<span class="number">-2</span>:pic_index]]</span><br><span class="line">next_scissors = [os.path.join(scissors_dir, fname)</span><br><span class="line">             <span class="keyword">for</span> fname <span class="keyword">in</span> scissors_files[pic_index<span class="number">-2</span>:pic_index]]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i, img_path <span class="keyword">in</span> enumerate(next_rock+next_paper+next_scissors):</span><br><span class="line">    img = mpimg.imread(img_path)</span><br><span class="line">    plt.imshow(img)</span><br><span class="line">    plt.axis(<span class="string">'Off'</span>)</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://s1.ax1x.com/2020/09/20/wTdMCD.png" alt="wTdMCD.png"></p>
+<p><a href="https://imgchr.com/i/wTdJbt" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/09/20/wTdJbt.th.png" alt="wTdJbt.th.png"></a></p>
+<p><a href="https://imgchr.com/i/wTdU58" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2020/09/20/wTdU58.png" alt="wTdU58.png"></a></p>
+<p>后面的图片省略…</p>
+<p>构建模型并查看。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> keras_preprocessing</span><br><span class="line"><span class="keyword">from</span> keras_preprocessing <span class="keyword">import</span> image</span><br><span class="line"><span class="keyword">from</span> keras_preprocessing.image <span class="keyword">import</span> ImageDataGenerator</span><br><span class="line"></span><br><span class="line">TRAINING_DIR = <span class="string">"./rps/"</span></span><br><span class="line">training_datagen = ImageDataGenerator(</span><br><span class="line">    rescale = <span class="number">1.0</span>/<span class="number">255</span>,</span><br><span class="line">    rotation_range = <span class="number">40</span>,</span><br><span class="line">    width_shift_range = <span class="number">0.2</span>,</span><br><span class="line">    height_shift_range = <span class="number">0.2</span>,</span><br><span class="line">    shear_range = <span class="number">0.2</span>,</span><br><span class="line">    zoom_range = <span class="number">0.2</span>,</span><br><span class="line">    horizontal_flip = <span class="literal">True</span>,</span><br><span class="line">    fill_mode = <span class="string">'nearest'</span>)</span><br><span class="line"></span><br><span class="line">VALIDATION_DIR = <span class="string">"./rps-test-set/"</span></span><br><span class="line">validation_datagen = ImageDataGenerator(rescale = <span class="number">1.0</span>/<span class="number">255</span>)</span><br><span class="line"></span><br><span class="line">train_generator = training_datagen.flow_from_directory(</span><br><span class="line">    TRAINING_DIR,</span><br><span class="line">    target_size = (<span class="number">150</span>, <span class="number">150</span>),</span><br><span class="line">    class_mode = <span class="string">'categorical'</span>,</span><br><span class="line">    batch_size = <span class="number">126</span>)</span><br><span class="line"></span><br><span class="line">validation_generator = validation_datagen.flow_from_directory(</span><br><span class="line">    VALIDATION_DIR,</span><br><span class="line">    target_size = (<span class="number">150</span>, <span class="number">150</span>),</span><br><span class="line">    class_mode = <span class="string">'categorical'</span>,</span><br><span class="line">    batch_size = <span class="number">126</span>)</span><br><span class="line"></span><br><span class="line">model = tf.keras.models.Sequential([</span><br><span class="line">   <span class="comment"># first convolution</span></span><br><span class="line">    tf.keras.layers.Conv2D(<span class="number">64</span>, (<span class="number">3</span>,<span class="number">3</span>), activation=<span class="string">'relu'</span>, input_shape=(<span class="number">150</span>,<span class="number">150</span>,<span class="number">3</span>)),</span><br><span class="line">    tf.keras.layers.MaxPooling2D(<span class="number">2</span>,<span class="number">2</span>),</span><br><span class="line">    <span class="comment"># second convolution</span></span><br><span class="line">    tf.keras.layers.Conv2D(<span class="number">64</span>, (<span class="number">3</span>,<span class="number">3</span>), activation=<span class="string">'relu'</span>),</span><br><span class="line">    tf.keras.layers.MaxPooling2D(<span class="number">2</span>, <span class="number">2</span>),</span><br><span class="line">    <span class="comment"># third convolution</span></span><br><span class="line">    tf.keras.layers.Conv2D(<span class="number">128</span>, (<span class="number">3</span>,<span class="number">3</span>), activation=<span class="string">'relu'</span>),</span><br><span class="line">    tf.keras.layers.MaxPooling2D(<span class="number">2</span>,<span class="number">2</span>),</span><br><span class="line">    <span class="comment"># fourth convolution</span></span><br><span class="line">    tf.keras.layers.Conv2D(<span class="number">128</span>, (<span class="number">3</span>,<span class="number">3</span>), activation=<span class="string">'relu'</span>),</span><br><span class="line">    tf.keras.layers.MaxPooling2D(<span class="number">2</span>,<span class="number">2</span>),</span><br><span class="line">    <span class="comment"># Flatten the results to feed into a DNN</span></span><br><span class="line">    tf.keras.layers.Flatten(),</span><br><span class="line">    tf.keras.layers.Dropout(<span class="number">0.5</span>),</span><br><span class="line">    <span class="comment"># 512 neuron hidden layer</span></span><br><span class="line">    tf.keras.layers.Dense(<span class="number">512</span>, activation=<span class="string">'relu'</span>),</span><br><span class="line">    <span class="comment"># Multi-Classification problems use softmax as activation</span></span><br><span class="line">    tf.keras.layers.Dense(<span class="number">3</span>, activation=<span class="string">'softmax'</span>)</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line">model.summary()</span><br></pre></td></tr></table></figure>
+
+<pre><code>Found 2520 images belonging to 3 classes.
+Found 372 images belonging to 3 classes.
+Model: &quot;sequential&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d (Conv2D)              (None, 148, 148, 64)      1792      
+_________________________________________________________________
+max_pooling2d (MaxPooling2D) (None, 74, 74, 64)        0         
+_________________________________________________________________
+conv2d_1 (Conv2D)            (None, 72, 72, 64)        36928     
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 36, 36, 64)        0         
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 34, 34, 128)       73856     
+_________________________________________________________________
+max_pooling2d_2 (MaxPooling2 (None, 17, 17, 128)       0         
+_________________________________________________________________
+conv2d_3 (Conv2D)            (None, 15, 15, 128)       147584    
+_________________________________________________________________
+max_pooling2d_3 (MaxPooling2 (None, 7, 7, 128)         0         
+_________________________________________________________________
+flatten (Flatten)            (None, 6272)              0         
+_________________________________________________________________
+dropout (Dropout)            (None, 6272)              0         
+_________________________________________________________________
+dense (Dense)                (None, 512)               3211776   
+_________________________________________________________________
+dense_1 (Dense)              (None, 3)                 1539      
+=================================================================
+Total params: 3,473,475
+Trainable params: 3,473,475
+Non-trainable params: 0
+_________________________________________________________________</code></pre><p>对模型进行编译、训练、保存。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">model.compile(loss=<span class="string">'categorical_crossentropy'</span>, optimizer=<span class="string">'rmsprop'</span>, metrics=[<span class="string">'accuracy'</span>])</span><br><span class="line">history = model.fit(train_generator, epochs=<span class="number">25</span>, steps_per_epoch=<span class="number">20</span>,</span><br><span class="line">                   validation_data=validation_generator, verbose=<span class="number">1</span>, validation_steps=<span class="number">3</span>)</span><br><span class="line">model.save(<span class="string">"rps.h5"</span>)</span><br></pre></td></tr></table></figure>
+
+<pre><code>Train for 20 steps, validate for 3 steps
+Epoch 1/25
+20/20 [==============================] - 22s 1s/step - loss: 0.4314 - accuracy: 0.9040 - val_loss: 0.0215 - val_accuracy: 1.0000
+Epoch 2/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0709 - accuracy: 0.9758 - val_loss: 0.0439 - val_accuracy: 0.9866
+Epoch 3/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0924 - accuracy: 0.9687 - val_loss: 0.0323 - val_accuracy: 0.9866
+Epoch 4/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0722 - accuracy: 0.9770 - val_loss: 0.0084 - val_accuracy: 1.0000
+Epoch 5/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0916 - accuracy: 0.9734 - val_loss: 0.0169 - val_accuracy: 0.9919
+Epoch 6/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0647 - accuracy: 0.9790 - val_loss: 0.0652 - val_accuracy: 0.9651
+Epoch 7/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0908 - accuracy: 0.9647 - val_loss: 0.0697 - val_accuracy: 0.9704
+Epoch 8/25
+20/20 [==============================] - 21s 1s/step - loss: 0.1004 - accuracy: 0.9687 - val_loss: 0.0169 - val_accuracy: 0.9973
+Epoch 9/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0480 - accuracy: 0.9829 - val_loss: 0.1042 - val_accuracy: 0.9731
+Epoch 10/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0687 - accuracy: 0.9770 - val_loss: 0.1541 - val_accuracy: 0.9059
+Epoch 11/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0429 - accuracy: 0.9877 - val_loss: 0.0494 - val_accuracy: 0.9704
+Epoch 12/25
+20/20 [==============================] - 21s 1s/step - loss: 0.1013 - accuracy: 0.9675 - val_loss: 0.0187 - val_accuracy: 1.0000
+Epoch 13/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0523 - accuracy: 0.9841 - val_loss: 0.0401 - val_accuracy: 0.9812
+Epoch 14/25
+20/20 [==============================] - 21s 1s/step - loss: 0.1444 - accuracy: 0.9524 - val_loss: 0.0185 - val_accuracy: 1.0000
+Epoch 15/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0420 - accuracy: 0.9877 - val_loss: 0.0280 - val_accuracy: 0.9919
+Epoch 16/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0514 - accuracy: 0.9817 - val_loss: 0.0109 - val_accuracy: 1.0000
+Epoch 17/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0644 - accuracy: 0.9782 - val_loss: 0.0179 - val_accuracy: 1.0000
+Epoch 18/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0331 - accuracy: 0.9893 - val_loss: 0.0584 - val_accuracy: 0.9758
+Epoch 19/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0488 - accuracy: 0.9833 - val_loss: 0.0808 - val_accuracy: 0.9651
+Epoch 20/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0503 - accuracy: 0.9821 - val_loss: 0.0238 - val_accuracy: 1.0000
+Epoch 21/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0625 - accuracy: 0.9778 - val_loss: 0.0279 - val_accuracy: 0.9839
+Epoch 22/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0358 - accuracy: 0.9901 - val_loss: 0.0268 - val_accuracy: 0.9866
+Epoch 23/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0410 - accuracy: 0.9837 - val_loss: 0.0344 - val_accuracy: 0.9704
+Epoch 24/25
+20/20 [==============================] - 21s 1s/step - loss: 0.1487 - accuracy: 0.9579 - val_loss: 0.0618 - val_accuracy: 0.9651
+Epoch 25/25
+20/20 [==============================] - 21s 1s/step - loss: 0.0259 - accuracy: 0.9917 - val_loss: 0.0253 - val_accuracy: 0.9892</code></pre><p>绘制结果。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">acc = history.history[<span class="string">'accuracy'</span>]</span><br><span class="line">val_acc = history.history[<span class="string">'val_accuracy'</span>]</span><br><span class="line">loss = history.history[<span class="string">'loss'</span>]</span><br><span class="line">val_loss = history.history[<span class="string">'val_loss'</span>]</span><br><span class="line"></span><br><span class="line">epochs = range(len(acc))</span><br><span class="line"></span><br><span class="line">plt.plot(epochs, acc, <span class="string">'r'</span>, label=<span class="string">'Training accuracy'</span>)</span><br><span class="line">plt.plot(epochs, val_acc, <span class="string">'b'</span>, label=<span class="string">'Validation accuracy'</span>)</span><br><span class="line">plt.title(<span class="string">'Training and validation accuracy'</span>)</span><br><span class="line">plt.legend(loc=<span class="number">0</span>)</span><br><span class="line">plt.figure()</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://s1.ax1x.com/2020/09/20/wTd02Q.png" alt="wTd02Q.png"></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+    <footer class="article-footer">
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tensorflow-2-0/" rel="tag">Tensorflow 2.0</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+
+  
+  
+  
+
+  
+
+</article>
+    
     <article id="post-Horses or Humans" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
@@ -931,84 +1108,6 @@ Epoch 15/15
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Tensorflow-2-0/" rel="tag">Tensorflow 2.0</a></li></ul>
-
-
-    </footer>
-
-  </div>
-
-  
-
-  
-  
-  
-
-  
-
-</article>
-    
-    <article id="post-160个CrackMe 0x17" class="article article-type-post" itemscope
-  itemprop="blogPost" data-scroll-reveal>
-
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/03/09/160%E4%B8%AACrackMe%200x17/"
-    >160个CrackMe 0x17</a
-  >
-</h2>
-  
-
-    </header>
-    
-
-    
-    <div class="article-meta">
-      <a href="/2020/03/09/160%E4%B8%AACrackMe%200x17/" class="article-date">
-  <time datetime="2020-03-09T12:00:00.000Z" itemprop="datePublished">2020-03-09</time>
-</a>
-      
-      
-      
-      
-    </div>
-    
-
-    
-
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-
-
-      
-
-      
-      <h3 id="0x00-初步分析"><a href="#0x00-初步分析" class="headerlink" title="0x00 初步分析"></a>0x00 初步分析</h3><p>首先打开crackme，要求输入name和serial，但是并没有Check之类的字样，只有底部的Status显示当前的序列号不合法。点击底部的About，出现说明：找到符合name的serial，并且不允许修改程序。<br><img src="https://img-blog.csdnimg.cn/20200309192631260.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200309193510837.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>拖入OD中进行分析，利用查找字符串插件找寻到成功和失败字样。<br><img src="https://img-blog.csdnimg.cn/20200309194720903.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>点击进入。发现了判断成功的条件，即0x403167地址的值（以下用[166]代替）需等于0x10。而166的值会在call Chafe_1.00401453函数后发生改变，于是按回车进入函数。</p>
-<h3 id="0x01-三段代码"><a href="#0x01-三段代码" class="headerlink" title="0x01 三段代码"></a>0x01 三段代码</h3><p>这里会发现三段代码，都断下之后按f9，发现程序会在三段代码之间来回跳，却一直无法输入name和serial，于是才想这个程序可能是持续循环的对name和serial进行判断。<br><img src="https://img-blog.csdnimg.cn/20200309194811253.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>将所有断点去掉后，填入name和serial，以便接下来进一步研究。<br><img src="https://img-blog.csdnimg.cn/20200309194825105.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_1,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>将所有断点恢复后，按下f9，会发现程序在代码段一三、代码段二三之间来回跳转，跳往一开始找到的最终判断点。<br>首先等程序断在代码段二之后，跟代码段二，发现这是一个GetDlgItemInt函数。它通过发送控件WM_GETTEXT消息来检索指定控件的文本。该函数通过剥离文本开头的任何额外的空格，然后转换十进制数字来翻译检索到的文本。该功能在到达文本末尾或遇到非数字字符时停止转换。简单来说就是会获取eax中的文本并赋值给188地址。而此时eax中的数为0x00BC614E（12345678），发现就是我们的serial。那么此时就可以知道，[188]=serial。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200309194916941.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>当程序断在代码段三以后，单步跟进行分析。[188] += 0x9112478，加完之后[188]==0则不跳转，不跳转则[166]可以加4。而此时可以看到[166] = 0xC，接着单步跟会发现程序来到开头的地方，进行赋值后最后[166]的值会跟0x10进行比较，相等则成功。<br>这意味着想要得到正确的serial就不能跳转，得让[166]加4，而要想不跳转[188]就得为<br>-0x9112478。这里要注意，计算机中负数进行加法得用他的补码来表示，而-0x9112478的补码为0xF6EEDB88。<br><img src="https://img-blog.csdnimg.cn/20200309194934605.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h3 id="0x02-核心算法"><a href="#0x02-核心算法" class="headerlink" title="0x02 核心算法"></a>0x02 核心算法</h3><p>那么[188]怎样才能为0xF6EEDB88呢？这就需要查看[188]到底经过了哪些算法变化。通过右键查找地址常量，就可以查看哪些地方出现了188地址。<br><img src="https://img-blog.csdnimg.cn/20200309195017853.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200309195049802.png" alt="在这里插入图片描述"><br>点击进去查看，会出现下方的代码。在代码段开头下断点，运行，会发现程序在跑完上方的代码段二后运行下方的代码，并且其中出现了我们的name。也就是说此时name存储在edi（通过lea操作edi获取18C地址）中，serial存储在[188]中。<br><img src="https://img-blog.csdnimg.cn/2020030919511040.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>18C地址中存放的是我们输入的用户名，被edi引用，[168]地址是一个计数器，用edi+[168]计数器进行偏移，168计数器初始为0，edi加完后，计数器累加1，然后取出[188]中我们输入序列号（数字格式，输入非数字会变为0）放入eax，eax加1后与edi（<strong>相当于取用户名计数器指针位置4字节，因为edi最多存放四个字节</strong>）异或运算，结果存入188地址，一直到计数器累加至0x10退出循环。经过16次循环后，[188]决定了是否能注册通过。</p>
-<p>而最关键的异或步骤就是eax中的值与edi中的值异或，这里要注意，通过f8单步跟发现，每循环一次，name（存储在edi中）都会后移一位，相当于<br>[1234]5,1[2345], 12[345],123[45],1234[5]这样<strong>每次取四字节的运算方式</strong>。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200309195133416.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>知道了加密原理，接下来就可以写注册机。因为异或是可以逆向进行的，所以我们令<br>serial = 0xF6EEDB88，而name分别为1234[5], 123[45], 12[345],1[2345] ,[1234]5的逆向方式进行计算。并且还要注意不论长度十六次循环是一定要走完的。</p>
-<h3 id="0x03-注册机实现"><a href="#0x03-注册机实现" class="headerlink" title="0x03 注册机实现"></a>0x03 注册机实现</h3><p>注册机算法如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">char</span> * name;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> serial = <span class="number">0xF6EEDB88</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> * p;</span><br><span class="line">    name = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">30</span>];</span><br><span class="line">    <span class="comment">// 对一片内存空间逐字节进行初始化，用0填充很重要</span></span><br><span class="line">    <span class="built_in">memset</span>(name, <span class="number">0</span>, <span class="built_in">strlen</span>(name));</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"name: "</span>;</span><br><span class="line">    <span class="built_in">cin</span>&gt;&gt;name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> x = <span class="number">0x10</span><span class="number">-1</span>; x &gt;= <span class="number">0</span>; x--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// unsigned long 确保四字节，这里p每次循环分别为一个长度为4的数组 </span></span><br><span class="line">        p = (<span class="keyword">unsigned</span> <span class="keyword">long</span> *) &amp;name[x];</span><br><span class="line">        serial = serial ^ *p;</span><br><span class="line">        serial--;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt;<span class="string">"serial: "</span> &lt;&lt;serial&lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    system(<span class="string">"pause"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>经过验证，注册机正确。<br><img src="https://img-blog.csdnimg.cn/20200309195712343.png" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200309195722682.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNzYyNTc0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>参考资料：<a href="https://www.52pojie.cn/thread-670504-1-1.html" target="_blank" rel="noopener">https://www.52pojie.cn/thread-670504-1-1.html</a></p>
-
-      
-      <!-- reward -->
-      
-    </div>
-    
-    
-      <!-- copyright -->
-      
-    <footer class="article-footer">
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Reverse/" rel="tag">Reverse</a></li></ul>
 
 
     </footer>
